@@ -1,7 +1,10 @@
 package com.example.leo3
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Gravity
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -27,22 +30,43 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+//        預設首頁
+        if (savedInstanceState == null) {
+            replaceFragment(HomeFragment())
+        }
+
 
 
 
         // Bottom Nav 切換 Fragment
         binding.mainBottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.navigation_home -> replaceFragment(HomeFragment())
-                R.id.navigation_stat -> replaceFragment(StatFragment())
-                R.id.navigation_setting -> replaceFragment(SettingFragment())
+                R.id.nav_home -> replaceFragment(HomeFragment())
+                R.id.nav_record -> replaceFragment(RecordFragment())
+                R.id.nav_stat -> replaceFragment(StatFragment())
+                R.id.nav_setting -> replaceFragment(SettingFragment())
             }
             true
         }
 
-        // FAB 按鈕事件
+        // FAB 短按：快速記帳
         binding.mainFabAdd.setOnClickListener {
 
+            val toast=Toast.makeText(this,"長按進入完整記帳",Toast.LENGTH_SHORT)
+            toast.setGravity(Gravity.BOTTOM, 0, 500)  // 調整這裡
+            toast.show()
+
+            QuickAddDialog().show(
+                supportFragmentManager,
+                "quick_add_dialog"
+            )
+        }
+
+        // FAB 長按：完整記帳
+        binding.mainFabAdd.setOnLongClickListener {
+            val intent = Intent(this, AddBillActivity::class.java)
+            startActivity(intent)
+            true
         }
     }
 

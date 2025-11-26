@@ -6,9 +6,12 @@
         android:icon="@drawable/app_icon"
         android:theme="@style/Theme.Leo3">
 
+        <activity android:name=".AddBillActivity"/>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
+
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
