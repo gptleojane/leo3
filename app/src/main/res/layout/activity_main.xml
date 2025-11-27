@@ -20,7 +20,7 @@
         android:layout_gravity="bottom"
         app:itemIconTint="@color/nav_selector"
         app:itemTextColor="@color/nav_selector"
-        android:background="#000000"
+        android:background="#DD000000"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_nav_menu" />
 
@@ -30,11 +30,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="55dp"
         android:scaleType="center"
         app:elevation="8dp"
         app:maxImageSize="56dp"
         app:tint="#FFFFFF"
+        android:contentDescription="@null"
         app:srcCompat="@drawable/add" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -4,21 +4,32 @@
     <item
         android:id="@+id/nav_home"
         android:title="@string/nav_home"
+        android:icon="@drawable/home"
         />
 
     <item
         android:id="@+id/nav_record"
         android:title="@string/nav_record"
+        android:icon="@drawable/record"
         />
+
+    <!-- 中間空白（假 item） -->
+    <item
+        android:id="@+id/nav_empty"
+        android:enabled="false"
+        android:title=""
+        android:checkable="false" />
 
     <item
         android:id="@+id/nav_stat"
         android:title="@string/nav_stat"
+        android:icon="@drawable/stat"
         />
 
     <item
         android:id="@+id/nav_setting"
         android:title="@string/nav_setting"
+        android:icon="@drawable/setting"
         />
 
 </menu>
