@@ -1,14 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView
-        android:text="@string/nav_home"
-        android:textSize="22sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <!-- ===================== 頂部區域 ===================== -->
+    <LinearLayout
+        android:id="@+id/home_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="12dp">
+
+        <!-- 月 / 年 切換 -->
+        <TextView
+            android:id="@+id/home_switch_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="月"
+            android:textSize="16sp"
+            android:padding="8dp"
+            android:background="#DDDDDD"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- 間隔 -->
+        <View
+            android:layout_width="12dp"
+            android:layout_height="wrap_content" />
+
+        <!-- 年份選擇 -->
+        <LinearLayout
+            android:id="@+id/home_year_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:id="@+id/home_current_year"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2025年"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/home_year_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="▼"
+                android:paddingStart="6dp"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- 間隔 -->
+        <View
+            android:layout_width="12dp"
+            android:layout_height="wrap_content" />
+
+        <!-- 月份選擇 -->
+        <LinearLayout
+            android:id="@+id/home_month_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <TextView
+                android:id="@+id/home_current_month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="11月"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/home_month_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="▼"
+                android:paddingStart="6dp"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+    <!-- ===================== 第二行：統計資訊 ===================== -->
+    <LinearLayout
+        android:id="@+id/home_summary_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:weightSum="3"
+        android:paddingVertical="8dp">
+
+        <!-- 支出 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/home_summary_expense_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="月支出"
+                android:textSize="14sp"
+                android:textColor="#555555" />
+
+            <TextView
+                android:id="@+id/home_summary_expense_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$0"
+                android:textSize="20sp"
+                android:textColor="#E57300"
+                android:paddingTop="4dp"/>
+        </LinearLayout>
+
+        <!-- 結餘 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/home_summary_balance_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="月結餘"
+                android:textSize="14sp"
+                android:textColor="#555555" />
+
+            <TextView
+                android:id="@+id/home_summary_balance_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$0"
+                android:textSize="20sp"
+                android:textColor="#000000"
+                android:paddingTop="4dp"/>
+        </LinearLayout>
+
+        <!-- 收入 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/home_summary_income_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="月收入"
+                android:textSize="14sp"
+                android:textColor="#555555" />
+
+            <TextView
+                android:id="@+id/home_summary_income_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$0"
+                android:textSize="20sp"
+                android:textColor="#1E88E5"
+                android:paddingTop="4dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <!-- 分隔線 -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#DDDDDD"
+        android:layout_marginVertical="12dp" />
+
+
+    <!-- ===================== 記帳列表 RecyclerView ===================== -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/home_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false" />
 
 </LinearLayout>

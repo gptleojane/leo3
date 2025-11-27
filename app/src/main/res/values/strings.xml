@@ -25,5 +25,16 @@
     <string name="nav_stat">統計</string>
     <string name="nav_setting">設定</string>
 
+    <string name="personalize">個人化設定</string>
+    <string name="personalize_themeSwitch">外觀主題</string>
+    <string name="personalize_changePassword">修改密碼</string>
+    <string name="personalize_signOut">登出帳號</string>
+    <string name="set">功能設定</string>
+    <string name="set_exportData">匯出資料(CSV)</string>
+    <string name="set_remind">記帳提醒</string>
+    <string name="set_feedBack">意見回饋</string>
+    <string name="other">其他</string>
+    <string name="other_about">關於</string>
+
 
 </resources>

@@ -2,10 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="48dp"
-    android:paddingLeft="32dp"
-    android:paddingRight="32dp">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -19,7 +16,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:text="個人化設定"
+            android:text="@string/personalize"
             android:textColor="#808080"
             android:textSize="12sp" />
 
@@ -44,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="12dp"
-                android:text="外觀主題"
+                android:text="@string/personalize_themeSwitch"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -69,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="12dp"
-                android:text="修改密碼"
+                android:text="@string/personalize_changePassword"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -94,7 +91,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="12dp"
-                android:text="登出帳號"
+                android:text="@string/personalize_signOut"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -114,7 +111,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:text="功能設定"
+            android:text="@string/set"
             android:textColor="#808080"
             android:textSize="12sp" />
 
@@ -139,7 +136,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="12dp"
-                android:text="匯出資料（CSV）"
+                android:text="@string/set_exportData"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -164,7 +161,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="12dp"
-                android:text="記帳提醒"
+                android:text="@string/set_remind"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -189,7 +186,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="12dp"
-                android:text="意見回饋（Email）"
+                android:text="@string/set_feedBack"
                 android:textSize="18sp" />
         </LinearLayout>
 
@@ -208,7 +205,7 @@
             android:layout_height="wrap_content"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:text="其他"
+            android:text="@string/other"
             android:textColor="#808080"
             android:textSize="12sp" />
 
@@ -233,7 +230,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingStart="12dp"
-                android:text="關於"
+                android:text="@string/other_about"
                 android:textSize="18sp" />
         </LinearLayout>
 
