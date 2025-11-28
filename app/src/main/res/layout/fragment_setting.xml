@@ -2,13 +2,13 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg_main">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
 
         <!-- 分類：個人化設定 -->
         <TextView
@@ -17,9 +17,8 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:text="@string/personalize"
-            android:textColor="#808080"
+            android:textColor="@color/text_hint"
             android:textSize="12sp" />
-
 
         <!-- 外觀主題 -->
         <LinearLayout
@@ -42,9 +41,9 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="12dp"
                 android:text="@string/personalize_themeSwitch"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="@color/text_primary" />
         </LinearLayout>
-
 
         <!-- 密碼修改 -->
         <LinearLayout
@@ -67,9 +66,9 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="12dp"
                 android:text="@string/personalize_changePassword"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="@color/text_primary" />
         </LinearLayout>
-
 
         <!-- 登出帳號 -->
         <LinearLayout
@@ -92,18 +91,17 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="12dp"
                 android:text="@string/personalize_signOut"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="@color/text_primary" />
         </LinearLayout>
-
 
         <!-- 分隔線 -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:background="@color/divider"
             android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:background="#DDDDDD" />
-
+            android:layout_marginBottom="12dp" />
 
         <!-- 分類：功能設定 -->
         <TextView
@@ -112,9 +110,8 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:text="@string/set"
-            android:textColor="#808080"
+            android:textColor="@color/text_hint"
             android:textSize="12sp" />
-
 
         <!-- 匯出資料 -->
         <LinearLayout
@@ -137,9 +134,9 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="12dp"
                 android:text="@string/set_exportData"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="@color/text_primary" />
         </LinearLayout>
-
 
         <!-- 記帳提醒 -->
         <LinearLayout
@@ -162,9 +159,9 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="12dp"
                 android:text="@string/set_remind"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="@color/text_primary" />
         </LinearLayout>
-
 
         <!-- 意見回饋 -->
         <LinearLayout
@@ -187,17 +184,16 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="12dp"
                 android:text="@string/set_feedBack"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="@color/text_primary" />
         </LinearLayout>
-
 
         <!-- 分隔線 -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginVertical="12dp"
-            android:background="#DDDDDD" />
-
+            android:background="@color/divider"
+            android:layout_marginVertical="12dp" />
 
         <!-- 分類：其他 -->
         <TextView
@@ -206,9 +202,8 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:text="@string/other"
-            android:textColor="#808080"
+            android:textColor="@color/text_hint"
             android:textSize="12sp" />
-
 
         <!-- 關於 -->
         <LinearLayout
@@ -231,7 +226,8 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="12dp"
                 android:text="@string/other_about"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textColor="@color/text_primary" />
         </LinearLayout>
 
     </LinearLayout>

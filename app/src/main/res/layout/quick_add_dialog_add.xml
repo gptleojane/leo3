@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="24dp"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:background="@color/bg_card">
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -13,15 +14,16 @@
             android:id="@+id/qadd_tiet_amount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/add_bill_amount" />
+            android:hint="@string/add_bill_amount"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint"/>
     </com.google.android.material.textfield.TextInputLayout>
-
 
     <Button
         android:id="@+id/qadd_bt_ok"
         android:text="@string/add_bill_add"
         android:layout_marginTop="24dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_primary"/>
 </LinearLayout>

@@ -24,18 +24,25 @@ class RegisterActivity : AppCompatActivity() {
             insets
         }
 
-        binding=ActivityRegisterBinding.inflate(layoutInflater)
+        binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.registerBtRegister.setOnClickListener {
+            val account = binding.registerTietAccount.text.toString()
+            val password = binding.registerTietPassword.text.toString()
+
+            if (account.isBlank() || password.isBlank()) {
+                Toast.makeText(this, "帳號密碼不能空白", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             Toast.makeText(this, "註冊成功", Toast.LENGTH_SHORT).show()
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
 
         binding.registerBtBack.setOnClickListener {
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
+            finish()
         }
     }
 }

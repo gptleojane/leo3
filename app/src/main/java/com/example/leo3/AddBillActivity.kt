@@ -5,12 +5,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.leo3.databinding.ActivityMainBinding
+import com.example.leo3.databinding.ActivityAddBillBinding
 
 class AddBillActivity : AppCompatActivity() {
 
     //    省去findViewById必要的宣告
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityAddBillBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,5 +22,21 @@ class AddBillActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        binding = ActivityAddBillBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+
+
+        binding.addbillBtAdd.setOnClickListener {
+
+
+            finish()
+        }
+
+        binding.addbillBtBack.setOnClickListener {
+            finish()
+        }
+
     }
 }

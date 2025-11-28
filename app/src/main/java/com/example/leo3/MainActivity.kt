@@ -3,7 +3,6 @@ package com.example.leo3
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Gravity
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
@@ -13,7 +12,7 @@ import androidx.fragment.app.Fragment
 
 class MainActivity : AppCompatActivity() {
 
-//    省去findViewById必要的宣告
+    //    省去findViewById必要的宣告
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,8 +35,6 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
-
         // Bottom Nav 切換 Fragment
         binding.mainBottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -51,10 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         // FAB 短按：快速記帳
         binding.mainFabAdd.setOnClickListener {
-
-            val toast=Toast.makeText(this,"長按進入完整記帳",Toast.LENGTH_SHORT)
-            toast.setGravity(Gravity.BOTTOM, 0, 500)  // 調整這裡
-            toast.show()
+            Toast.makeText(this, "長按進入完整記帳", Toast.LENGTH_SHORT).show()
 
             QuickAddDialog().show(
                 supportFragmentManager,

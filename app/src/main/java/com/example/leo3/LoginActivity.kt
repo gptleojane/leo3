@@ -28,7 +28,13 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.loginBtLogin.setOnClickListener {
-            Toast.makeText(this, "登入成功", Toast.LENGTH_SHORT).show()
+            val account = binding.loginTietAccount.text.toString()
+            val password = binding.loginTietPassword.text.toString()
+
+            if (account.isBlank() || password.isBlank()) {
+                Toast.makeText(this, "帳號密碼不能空白", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
