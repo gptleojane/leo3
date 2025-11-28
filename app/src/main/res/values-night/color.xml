@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <!-- ===== 背景 ===== -->
+    <!-- App 主背景（深灰 #121212） -->
+    <color name="bg_main">#121212</color>
+
+    <!-- 卡片背景（介於 #1E1E1E 與 #222222 之間，易閱讀） -->
+    <color name="bg_card">#1E1E1E</color>
+
+    <!-- Bottom Navigation 背景（半透明黑） -->
+    <color name="nav_bar_bg">#AA000000</color>
+
+    <!-- ===== 文字 ===== -->
+    <!-- 主要文字（白色） -->
+    <color name="text_primary">#FFFFFF</color>
+
+    <!-- 次要文字（柔和灰） -->
+    <color name="text_secondary">#BBBBBB</color>
+
+    <!-- 輕度提示文字 -->
+    <color name="text_hint">#888888</color>
+
+    <!-- ===== 功能色 ===== -->
+    <!-- 深色模式橘色：微調亮度，避免被黑底吃掉 -->
+    <color name="expense_orange">#FFB74D</color>
+
+    <!-- 深色模式藍色：提升亮度 -->
+    <color name="income_blue">#64B5F6</color>
+
+    <!-- ===== 分隔線 ===== -->
+    <color name="divider">#333333</color>
+
+    <!-- ===== Bottom Nav Selector ===== -->
+    <color name="nav_selected">#FFFFFF</color>
+    <color name="nav_unselected">#777777</color>
+
+    <!-- FAB Icon Tint（保持白色） -->
+    <color name="fab_icon_tint">#000000</color>
+
+    <color name="number_pad_button_bg">#333333</color>
+
+
+</resources>
+
+
+

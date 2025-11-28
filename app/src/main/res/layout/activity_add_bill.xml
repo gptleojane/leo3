@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="20dp"
         app:selectionRequired="true"
         app:singleSelection="true"
@@ -151,7 +151,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <!-- 返回按鈕 -->
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/addbill_bt_back"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
@@ -164,4 +164,206 @@
         app:layout_constraintTop_toBottomOf="@id/addbill_til_note"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/number_pad_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        app:cardBackgroundColor="@color/bg_card"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp"
+        app:layout_constraintTop_toBottomOf="@id/addbill_bt_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <GridLayout
+            android:id="@+id/number_pad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            android:rowCount="4"
+            android:padding="12dp">
+
+            <!-- 1 -->
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:id="@+id/np_1"
+                android:text="1"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cornerRadius="16dp"
+                app:strokeWidth="0dp"
+                app:backgroundTint="@color/number_pad_button_bg"
+                android:textColor="@color/text_primary" />
+
+            <!-- 2 -->
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:id="@+id/np_2"
+                android:text="2"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cornerRadius="16dp"
+                app:strokeWidth="0dp"
+                app:backgroundTint="@color/number_pad_button_bg"
+                android:textColor="@color/text_primary" />
+
+            <!-- 3 -->
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:id="@+id/np_3"
+                android:text="3"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cornerRadius="16dp"
+                app:strokeWidth="0dp"
+                app:backgroundTint="@color/number_pad_button_bg"
+                android:textColor="@color/text_primary" />
+
+            <!-- 4 -->
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:id="@+id/np_4"
+                android:text="4"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cornerRadius="16dp"
+                app:strokeWidth="0dp"
+                app:backgroundTint="@color/number_pad_button_bg"
+                android:textColor="@color/text_primary" />
+
+            <!-- 5 -->
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:id="@+id/np_5"
+                android:text="5"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cornerRadius="16dp"
+                app:strokeWidth="0dp"
+                app:backgroundTint="@color/number_pad_button_bg"
+                android:textColor="@color/text_primary" />
+
+            <!-- 6 -->
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:id="@+id/np_6"
+                android:text="6"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cornerRadius="16dp"
+                app:strokeWidth="0dp"
+                app:backgroundTint="@color/number_pad_button_bg"
+                android:textColor="@color/text_primary" />
+
+            <!-- 7 -->
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:id="@+id/np_7"
+                android:text="7"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cornerRadius="16dp"
+                app:strokeWidth="0dp"
+                app:backgroundTint="@color/number_pad_button_bg"
+                android:textColor="@color/text_primary" />
+
+            <!-- 8 -->
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:id="@+id/np_8"
+                android:text="8"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cornerRadius="16dp"
+                app:strokeWidth="0dp"
+                app:backgroundTint="@color/number_pad_button_bg"
+                android:textColor="@color/text_primary" />
+
+            <!-- 9 -->
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:id="@+id/np_9"
+                android:text="9"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cornerRadius="16dp"
+                app:strokeWidth="0dp"
+                app:backgroundTint="@color/number_pad_button_bg"
+                android:textColor="@color/text_primary" />
+
+            <!-- AC -->
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:id="@+id/np_ac"
+                android:text="AC"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cornerRadius="16dp"
+                app:strokeWidth="0dp"
+                app:backgroundTint="@color/expense_orange"
+                android:textColor="@color/bg_card" />
+
+            <!-- 0 -->
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:id="@+id/np_0"
+                android:text="0"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cornerRadius="16dp"
+                app:strokeWidth="0dp"
+                app:backgroundTint="@color/number_pad_button_bg"
+                android:textColor="@color/text_primary" />
+
+            <!-- DEL -->
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:id="@+id/np_del"
+                android:text="DEL"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cornerRadius="16dp"
+                app:strokeWidth="0dp"
+                app:backgroundTint="@color/income_blue"
+                android:textColor="@color/bg_card" />
+
+        </GridLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+

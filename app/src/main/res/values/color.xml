@@ -39,6 +39,9 @@
     <!-- FAB Icon Tint -->
     <color name="fab_icon_tint">#FFFFFF</color>
 
+    <color name="number_pad_button_bg">#EEEEEE</color>
+
+
 </resources>
 
 
