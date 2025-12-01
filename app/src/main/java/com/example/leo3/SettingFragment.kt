@@ -1,5 +1,6 @@
 package com.example.leo3
 
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
@@ -7,9 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.example.leo3.databinding.FragmentSettingBinding
+import java.util.Calendar
 
 class SettingFragment : Fragment() {
 
@@ -27,7 +30,7 @@ class SettingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // ================= 個人化設定 =================
+        // 外觀主題
         binding.settingFragmentPersonalizeThemeSwitch.setOnClickListener {
             toggleTheme()
         }
@@ -48,17 +51,12 @@ class SettingFragment : Fragment() {
             // TODO: 匯出資料 (CSV)
         }
 
-        binding.settingFragmentSetRemind.setOnClickListener {
-            // TODO: 記帳提醒
-        }
 
-        binding.settingFragmentSetFeedBack.setOnClickListener {
-            // TODO: 意見回饋 Email
-        }
 
-        // ================= 其他 =================
+
+        // 關於2
         binding.settingFragmentOtherAbout.setOnClickListener {
-            // TODO: 前往「關於」頁面
+            showAboutDialog()
         }
     }
 
@@ -80,6 +78,17 @@ class SettingFragment : Fragment() {
             }
         }
     }
+
+
+    private fun showAboutDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("APP名稱(考慮刪除)2")
+            .setMessage("版本：1.0.0")
+            .setPositiveButton("確定", null)
+            .show()
+    }
+
+
 
 
 }
