@@ -1,9 +1,9 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
 }
+
 
 android {
     namespace = "com.example.leo3"
@@ -53,8 +53,14 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-    // 🔥 Firebase BoM
+// Firebase BoM（版本管理）
     implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
-    // 🔥 Firebase Analytics（必備）
+
+// Firebase Analytics
     implementation("com.google.firebase:firebase-analytics")
+
+// 如果你要用 Firebase Auth
+    implementation("com.google.firebase:firebase-auth")
+
+
 }

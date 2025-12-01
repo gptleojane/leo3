@@ -8,13 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.leo3.databinding.ActivityRegisterBinding
-import com.google.firebase.auth.FirebaseAuth
+
 
 class RegisterActivity : AppCompatActivity() {
     //    省去findViewById必要的宣告
     private lateinit var binding: ActivityRegisterBinding
-
-    private val auth: FirebaseAuth by lazy { FirebaseAuth.getInstance() }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
