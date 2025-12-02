@@ -53,14 +53,12 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
-// Firebase BoM（版本管理）
-    implementation(platform("com.google.firebase:firebase-bom:34.6.0"))
+    implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
 
-// Firebase Analytics
     implementation("com.google.firebase:firebase-analytics")
 
-// 如果你要用 Firebase Auth
-    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+
 
 
 }
