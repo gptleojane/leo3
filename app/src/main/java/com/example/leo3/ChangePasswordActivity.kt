@@ -7,10 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.leo3.databinding.ActivityChangePasswordBinding
+import com.google.firebase.firestore.FirebaseFirestore
 
 class ChangePasswordActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivityChangePasswordBinding
+
+    private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +34,7 @@ class ChangePasswordActivity : AppCompatActivity() {
             val confirmPwd = binding.cpTietConfirmnewpassword.text.toString()
 
             if (oldPwd.isBlank() || newPwd.isBlank() || confirmPwd.isBlank()) {
-                Toast.makeText(this, "請輸入完整資訊", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "不能為空白", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
@@ -45,6 +47,8 @@ class ChangePasswordActivity : AppCompatActivity() {
                 Toast.makeText(this, "兩次新密碼不相同", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
+
 
             Toast.makeText(this, "修改成功", Toast.LENGTH_SHORT).show()
             finish()

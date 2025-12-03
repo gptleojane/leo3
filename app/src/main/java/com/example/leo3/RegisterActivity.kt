@@ -37,8 +37,8 @@ class RegisterActivity : AppCompatActivity() {
                 Toast.makeText(this, "帳號密碼不能空白", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            if (password.length < 6) {
-                Toast.makeText(this, "密碼長度至少6位", Toast.LENGTH_SHORT).show()
+            if (password.length < 3) {
+                Toast.makeText(this, "密碼長度至少3位", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             if (account.length > 20) {
@@ -51,7 +51,7 @@ class RegisterActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            db.collection("user").document(account).get()
+            db.collection("users").document(account).get()
                 .addOnSuccessListener { doc ->
                     if (doc.exists()) {
                         Toast.makeText(this, "帳號已存在", Toast.LENGTH_SHORT).show()
@@ -63,7 +63,7 @@ class RegisterActivity : AppCompatActivity() {
                         "password" to password,
                     )
 
-                    db.collection("user")
+                    db.collection("users")
                         .document(account)
                         .set(userData)
                         .addOnSuccessListener {
