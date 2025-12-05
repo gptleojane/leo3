@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.leo3.databinding.ActivityMainBinding
@@ -18,16 +19,35 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
 
-//      省去findViewById必要的宣告，後面就可以直接使用binding.
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            // FragmentContainerView → 避開上方安全區、下方交給 nav 管
+            binding.mainFragment.setPadding(
+                0,
+                systemBars.top,
+                0,
+                0
+            )
+
+            // BottomNav → 避開下方手勢列
+            binding.mainBottomNav.setPadding(
+                0,
+                0,
+                0,
+                systemBars.bottom
+            )
+
+            // FAB → 從底部向上推一點避免擋到手勢列
+            val params = binding.mainFabAdd.layoutParams as CoordinatorLayout.LayoutParams
+            params.bottomMargin = systemBars.bottom + 16
+            binding.mainFabAdd.layoutParams = params
+
+            insets
+        }
 
 //        預設首頁
         if (savedInstanceState == null) {

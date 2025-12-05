@@ -13,10 +13,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.example.leo3.databinding.FragmentSettingBinding
+import com.example.leo3.util.UserManager
 import java.util.Calendar
 
 class SettingFragment : Fragment() {
-
     private var _binding: FragmentSettingBinding? = null
     private val binding get() = _binding!!
 
@@ -33,8 +33,12 @@ class SettingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val sp = requireContext().getSharedPreferences("user", AppCompatActivity.MODE_PRIVATE)
-        val account = sp.getString("account", null)
+
+
+//        val sp = requireContext().getSharedPreferences("user", AppCompatActivity.MODE_PRIVATE)
+//        val account = sp.getString("account", null)
+
+        val account= UserManager.getAccount(requireContext())
         binding.settingFragmentUserInfoEmail.text=account
 
         // 外觀主題
@@ -48,8 +52,12 @@ class SettingFragment : Fragment() {
         }
 
         binding.settingFragmentPersonalizeSignOut.setOnClickListener {
+            UserManager.logout(requireContext())
             Toast.makeText(requireContext(), "登出成功", Toast.LENGTH_SHORT).show()
+
+
             val intent = Intent(requireContext(), LoginActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
         }
 
@@ -74,22 +82,22 @@ class SettingFragment : Fragment() {
 
 
     private fun toggleTheme() {
-        val currentMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        val theme = UserManager.getTheme(requireContext())
 
-        when (currentMode) {
-            Configuration.UI_MODE_NIGHT_YES -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
-            else -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
+        if (theme=="dark") {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            UserManager.setTheme(requireContext(), "light") // 淺色
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            UserManager.setTheme(requireContext(), "dark") // 深色
         }
     }
 
 
+
     private fun showAboutDialog() {
         AlertDialog.Builder(requireContext())
-            .setTitle("APP名稱(考慮刪除)2")
+            .setTitle("APP名稱(考慮刪除)")
             .setMessage("版本：1.0.0")
             .setPositiveButton("確定", null)
             .show()

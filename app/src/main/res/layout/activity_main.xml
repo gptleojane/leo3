@@ -11,10 +11,6 @@
         android:id="@+id/main_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="48dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:layout_marginBottom="56dp"
         android:background="@color/bg_main"/>
 
     <!-- Bottom Navigation -->
@@ -34,9 +30,8 @@
         android:id="@+id/main_fab_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="52dp"
-        android:scaleType="center"
+        app:layout_anchor="@id/main_bottom_nav"
+        app:layout_anchorGravity="top|center_horizontal"
         app:elevation="8dp"
         app:maxImageSize="56dp"
         app:tint="@color/fab_icon_tint"
