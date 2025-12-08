@@ -67,6 +67,38 @@ class RegisterActivity : AppCompatActivity() {
                         .document(account)
                         .set(userData)
                         .addOnSuccessListener {
+
+                            // =============================
+                            // 註冊成功 → 建立預設分類（支出 + 收入）
+                            // =============================
+
+                            val userCategories = db.collection("users")
+                                .document(account)
+                                .collection("categories")
+
+                            // 支出分類（含 未分類）
+                            val expenseCategories = listOf(
+                                mapOf("name" to "食", "type" to "expense", "sortOrder" to 1, "fixed" to false),
+                                mapOf("name" to "衣", "type" to "expense", "sortOrder" to 2, "fixed" to false),
+                                mapOf("name" to "住", "type" to "expense", "sortOrder" to 3, "fixed" to false),
+                                mapOf("name" to "行", "type" to "expense", "sortOrder" to 4, "fixed" to false),
+                                mapOf("name" to "未分類", "type" to "expense", "sortOrder" to 99999, "fixed" to true),
+                            )
+
+                            // 收入分類（含 未分類）
+                            val incomeCategories = listOf(
+                                mapOf("name" to "薪水", "type" to "income", "sortOrder" to 1, "fixed" to false),
+                                mapOf("name" to "獎金", "type" to "income", "sortOrder" to 2, "fixed" to false),
+                                mapOf("name" to "其他", "type" to "income", "sortOrder" to 3, "fixed" to false),
+                                mapOf("name" to "未分類", "type" to "income", "sortOrder" to 99999, "fixed" to true),
+                            )
+
+                            // 寫入 Firestore（autoId）
+                            for (c in expenseCategories) userCategories.add(c)
+                            for (c in incomeCategories) userCategories.add(c)
+
+                            // =============================
+
                             Toast.makeText(this, "註冊成功", Toast.LENGTH_SHORT).show()
                             startActivity(Intent(this, LoginActivity::class.java))
                         }

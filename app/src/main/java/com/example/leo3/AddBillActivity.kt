@@ -1,17 +1,24 @@
 package com.example.leo3
 
+import android.app.DatePickerDialog
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.leo3.databinding.ActivityAddBillBinding
+import com.example.leo3.util.UserManager
+import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Calendar
+
 
 class AddBillActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddBillBinding
+    private val db = FirebaseFirestore.getInstance()
 
-
-
+    private var categoryNameList = mutableListOf<String>()
+    private var categoryIdMap = mutableMapOf<String, String>()   // name → docId
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,66 +33,138 @@ class AddBillActivity : AppCompatActivity() {
             insets
         }
 
-        binding.addbillBtAdd.setOnClickListener {
+        // 預設日期
+        setupDatePicker()
 
+        // 數字鍵盤
+        setupNumberPad()
 
-            finish()
+        binding.addbillActvCategory.setOnClickListener {
+            println("分類欄位被點擊了！")
+            binding.addbillActvCategory.showDropDown()
         }
 
-        binding.addbillBtBack.setOnClickListener {
-            finish()
+
+        // ⭐⭐⭐ 預設支出
+        binding.addbillMbExpense.isChecked = true
+        loadCategories("expense")
+
+        // ⭐⭐⭐ 切換支出 / 收入自動載入分類
+        binding.addbillMbtgType.addOnButtonCheckedListener { _, checkedId, _ ->
+            when (checkedId) {
+                R.id.addbill_mb_expense -> loadCategories("expense")
+                R.id.addbill_mb_income -> loadCategories("income")
+            }
         }
 
-        // 數字按鍵（0～9）
-        binding.np0.setOnClickListener { appendNumber("0") }
-        binding.np1.setOnClickListener { appendNumber("1") }
-        binding.np2.setOnClickListener { appendNumber("2") }
-        binding.np3.setOnClickListener { appendNumber("3") }
-        binding.np4.setOnClickListener { appendNumber("4") }
-        binding.np5.setOnClickListener { appendNumber("5") }
-        binding.np6.setOnClickListener { appendNumber("6") }
-        binding.np7.setOnClickListener { appendNumber("7") }
-        binding.np8.setOnClickListener { appendNumber("8") }
-        binding.np9.setOnClickListener { appendNumber("9") }
+        // ⭐⭐⭐ 點分類欄位就展開選單
+        binding.addbillActvCategory.setOnClickListener {
+            binding.addbillActvCategory.showDropDown()
+        }
 
-// AC 清除
-        binding.npAc.setOnClickListener { clearAll() }
+        // 新增帳
+        binding.addbillBtAdd.setOnClickListener { }
 
-//  刪除倒退
-        binding.npDel.setOnClickListener { deleteLast() }
-
-
+        // 返回
+        binding.addbillBtBack.setOnClickListener { finish() }
     }
 
-//    建立千分為小數點
-    private fun formatAmount(raw: String): String {
-        if (raw.isEmpty()) return ""
-        val num = raw.toLong()
-        return "%,d".format(num)   // 會輸出 1,234 形式
-    }
+    private fun setupDatePicker() {
+        val cal = Calendar.getInstance()
+        val today =
+            "${cal.get(Calendar.YEAR)}-${cal.get(Calendar.MONTH) + 1}-${cal.get(Calendar.DAY_OF_MONTH)}"
+        binding.addbillTietDate.setText(today)
 
-//新增的數字會加入在最後方，疊加方式
-    private fun appendNumber(num: String) {
-    // 取目前金額文字並移除逗號
-    val current = binding.addbillTietAmount.text.toString().replace(",", "")
-    val newValue = current + num
-
-    // 格式化（加入千分位）
-    val formatted = formatAmount(newValue)
-
-    binding.addbillTietAmount.setText(formatted)
-    }
-
-    private fun deleteLast() {
-        val current = binding.addbillTietAmount.text.toString().replace(",", "")
-        if (current.isNotEmpty()) {
-            val newValue = current.dropLast(1)
-            binding.addbillTietAmount.setText(formatAmount(newValue))
+        binding.addbillTietDate.setOnClickListener {
+            DatePickerDialog(
+                this,
+                { _, year, month, day ->
+                    binding.addbillTietDate.setText("$year-${month + 1}-$day")
+                },
+                cal.get(Calendar.YEAR),
+                cal.get(Calendar.MONTH),
+                cal.get(Calendar.DAY_OF_MONTH)
+            ).show()
         }
     }
 
-    private fun clearAll() {
-        binding.addbillTietAmount.setText("")
+    // ================= 收入 / 支出 切換 ==================
+    private fun setupTypeToggle() {
+
+        // 預設支出
+        binding.addbillMbExpense.isChecked = true
+        loadCategories("expense")
+
+        binding.addbillMbtgType.addOnButtonCheckedListener { _, checkedId, _ ->
+            when (checkedId) {
+                R.id.addbill_mb_expense -> loadCategories("expense")
+                R.id.addbill_mb_income -> loadCategories("income")
+            }
+        }
+    }
+
+    // ================= 讀取 Firestore 分類 ==================
+    private fun loadCategories(type: String) {
+        val account = UserManager.getAccount(this) ?: return
+
+        db.collection("users")
+            .document(account)
+            .collection("categories")
+            .whereEqualTo("type", type)
+            .orderBy("sortOrder")
+            .get()
+            .addOnSuccessListener { result ->
+
+                categoryNameList.clear()
+                categoryIdMap.clear()
+
+                for (doc in result) {
+                    val name = doc.getString("name") ?: ""
+                    categoryNameList.add(name)
+                    categoryIdMap[name] = doc.id
+                }
+
+                // Adapter
+                val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, categoryNameList)
+                binding.addbillActvCategory.setAdapter(adapter)
+            }
+    }
+
+
+    // ----------------- 數字鍵盤 -----------------
+    private fun setupNumberPad() {
+
+        fun append(num: String) {
+            val raw = binding.addbillTietAmount.text.toString().replace(",", "")
+
+            if (raw == "" && num == "0") return
+
+            val newValue = raw + num
+            binding.addbillTietAmount.setText("%,d".format(newValue.toLong()))
+        }
+
+        binding.np0.setOnClickListener { append("0") }
+        binding.np1.setOnClickListener { append("1") }
+        binding.np2.setOnClickListener { append("2") }
+        binding.np3.setOnClickListener { append("3") }
+        binding.np4.setOnClickListener { append("4") }
+        binding.np5.setOnClickListener { append("5") }
+        binding.np6.setOnClickListener { append("6") }
+        binding.np7.setOnClickListener { append("7") }
+        binding.np8.setOnClickListener { append("8") }
+        binding.np9.setOnClickListener { append("9") }
+
+        binding.npDel.setOnClickListener {
+            val raw = binding.addbillTietAmount.text.toString().replace(",", "")
+            if (raw.isNotEmpty()) {
+                val newValue = raw.dropLast(1)
+                binding.addbillTietAmount.setText(if (newValue == "") "" else "%,d".format(newValue.toLong()))
+            }
+        }
+
+        binding.npAc.setOnClickListener {
+            binding.addbillTietAmount.setText("")
+        }
     }
 
 }
