@@ -2,12 +2,17 @@ package com.example.leo3
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.leo3.databinding.ActivityAddBillBinding
+import com.example.leo3.ui.CategoryAdapter
+import com.example.leo3.ui.model.CategoryItem
 import com.example.leo3.util.UserManager
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Calendar
@@ -16,9 +21,11 @@ import java.util.Calendar
 class AddBillActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddBillBinding
     private val db = FirebaseFirestore.getInstance()
+    private var categoryList = mutableListOf<CategoryItem>()
+    private lateinit var categoryAdapter: CategoryAdapter
+    private var selectedCategoryId: String? = null
+    private fun getToday(): Calendar = Calendar.getInstance()
 
-    private var categoryNameList = mutableListOf<String>()
-    private var categoryIdMap = mutableMapOf<String, String>()   // name → docId
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,77 +40,133 @@ class AddBillActivity : AppCompatActivity() {
             insets
         }
 
-        // 預設日期
-        setupDatePicker()
 
-        // 數字鍵盤
-        setupNumberPad()
+        // RecyclerView 設定 3 欄
+        binding.addbillRecyclerView.layoutManager = GridLayoutManager(this, 3)
 
-        binding.addbillActvCategory.setOnClickListener {
-            println("分類欄位被點擊了！")
-            binding.addbillActvCategory.showDropDown()
-        }
+        setTodayDate()
 
+        // Toggle 切換收入 / 支出
+        binding.addbillMbtgType.addOnButtonCheckedListener { _, checkedId, isChecked ->
+//            重複點選會直接視為無效，避免多跑一次
+            if (!isChecked) return@addOnButtonCheckedListener
 
-        // ⭐⭐⭐ 預設支出
-        binding.addbillMbExpense.isChecked = true
-        loadCategories("expense")
-
-        // ⭐⭐⭐ 切換支出 / 收入自動載入分類
-        binding.addbillMbtgType.addOnButtonCheckedListener { _, checkedId, _ ->
-            when (checkedId) {
-                R.id.addbill_mb_expense -> loadCategories("expense")
-                R.id.addbill_mb_income -> loadCategories("income")
+            val type = when (checkedId) {
+                binding.addbillMbExpense.id -> "expense"
+                else -> "income"
             }
+            loadCategories(type)
         }
 
-        // ⭐⭐⭐ 點分類欄位就展開選單
-        binding.addbillActvCategory.setOnClickListener {
-            binding.addbillActvCategory.showDropDown()
-        }
 
-        // 新增帳
-        binding.addbillBtAdd.setOnClickListener { }
-
-        // 返回
-        binding.addbillBtBack.setOnClickListener { finish() }
-    }
-
-    private fun setupDatePicker() {
-        val cal = Calendar.getInstance()
-        val today =
-            "${cal.get(Calendar.YEAR)}-${cal.get(Calendar.MONTH) + 1}-${cal.get(Calendar.DAY_OF_MONTH)}"
-        binding.addbillTietDate.setText(today)
 
         binding.addbillTietDate.setOnClickListener {
-            DatePickerDialog(
+            val cal = getToday()
+
+            val picker = DatePickerDialog(
                 this,
-                { _, year, month, day ->
-                    binding.addbillTietDate.setText("$year-${month + 1}-$day")
+                { _, y, m, d ->
+                    val dateStr = "$y/${m + 1}/$d"
+                    binding.addbillTietDate.setText(dateStr)
                 },
                 cal.get(Calendar.YEAR),
                 cal.get(Calendar.MONTH),
                 cal.get(Calendar.DAY_OF_MONTH)
-            ).show()
+            )
+
+            picker.show()
         }
-    }
 
-    // ================= 收入 / 支出 切換 ==================
-    private fun setupTypeToggle() {
 
-        // 預設支出
-        binding.addbillMbExpense.isChecked = true
+        // 數字鍵盤
+        setupNumberPad()
+
+        // 新增帳
+        binding.addbillBtAdd.setOnClickListener {
+            addBill()
+        }
+
+        // 返回
+        binding.addbillBtBack.setOnClickListener { finish() }
+
+
+        // 進入畫面預設載入 expense
+        binding.addbillMbtgType.check(R.id.addbill_mb_expense)
         loadCategories("expense")
 
-        binding.addbillMbtgType.addOnButtonCheckedListener { _, checkedId, _ ->
-            when (checkedId) {
-                R.id.addbill_mb_expense -> loadCategories("expense")
-                R.id.addbill_mb_income -> loadCategories("income")
-            }
-        }
+
     }
 
-    // ================= 讀取 Firestore 分類 ==================
+    private fun addBill() {
+        //1.金額初始化，去除,
+        val amountText = binding.addbillTietAmount.text.toString().replace(",", "")
+        if (amountText.isBlank()) {
+            Toast.makeText(this, "請輸入金額", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val amount = amountText.toLong()
+
+        // 2. 日期
+        val dateStr = binding.addbillTietDate.text.toString()
+        val parts = dateStr.split("/")
+        val year = parts[0].toInt()
+        val month = parts[1].toInt()
+        val day = parts[2].toInt()
+
+        val cal = Calendar.getInstance()
+        cal.set(year, month - 1, day)
+        val timestamp = com.google.firebase.Timestamp(cal.time)
+
+        // 3. 類型
+        val type = if (binding.addbillMbExpense.isChecked) "expense" else "income"
+
+        // 4. 備註
+        val note = binding.addbillTietNote.text.toString()
+
+        // 5. 分類
+        if (selectedCategoryId == null) {
+            return
+        }
+
+        val billData = hashMapOf(
+            "type" to type,
+            "amount" to amount,
+            "note" to note,
+            "date" to timestamp,
+            "year" to year,
+            "month" to month,
+            "day" to day,
+            "weekDay" to cal.get(Calendar.DAY_OF_WEEK),
+            "categoryId" to selectedCategoryId
+        )
+
+        val account = UserManager.getAccount(this) ?: return
+
+        db.collection("users")
+            .document(account)
+            .collection("bills")
+            .add(billData)
+            .addOnSuccessListener {
+                Toast.makeText(this, "新增成功", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "新增失敗: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+
+    private fun setTodayDate() {
+        val cal = getToday()
+        val dateStr =
+            "${cal.get(Calendar.YEAR)}/${cal.get(Calendar.MONTH) + 1}/${cal.get(Calendar.DAY_OF_MONTH)}"
+        binding.addbillTietDate.setText(dateStr)
+    }
+
+
+    // -----------------------------
+// Firestore 載入分類
+// -----------------------------
     private fun loadCategories(type: String) {
         val account = UserManager.getAccount(this) ?: return
 
@@ -113,21 +176,36 @@ class AddBillActivity : AppCompatActivity() {
             .whereEqualTo("type", type)
             .orderBy("sortOrder")
             .get()
-            .addOnSuccessListener { result ->
+            .addOnSuccessListener { qs ->
 
-                categoryNameList.clear()
-                categoryIdMap.clear()
+//                避免累加資料（例如切換 income/expense）
+                categoryList.clear()
 
-                for (doc in result) {
-                    val name = doc.getString("name") ?: ""
-                    categoryNameList.add(name)
-                    categoryIdMap[name] = doc.id
+                for (doc in qs) {
+                    categoryList.add(
+                        CategoryItem(
+                            id = doc.id,
+                            name = doc.getString("name") ?: "",
+                            type = doc.getString("type") ?: "",
+                            sortOrder = (doc.getLong("sortOrder") ?: 0L).toInt()
+                        )
+                    )
                 }
-
-                // Adapter
-                val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, categoryNameList)
-                binding.addbillActvCategory.setAdapter(adapter)
+                setupAdapter()
             }
+    }
+
+
+    private fun setupAdapter() {
+        // 永遠選擇第一筆（未分類）
+        val defaultIndex = 0
+
+        categoryAdapter = CategoryAdapter(categoryList, defaultIndex) { item ->
+            selectedCategoryId = item.id
+        }
+        binding.addbillRecyclerView.adapter = categoryAdapter
+
+        selectedCategoryId = categoryList[defaultIndex].id
     }
 
 
@@ -137,7 +215,14 @@ class AddBillActivity : AppCompatActivity() {
         fun append(num: String) {
             val raw = binding.addbillTietAmount.text.toString().replace(",", "")
 
+            // 不允許第一碼就是 0
             if (raw == "" && num == "0") return
+
+            // ⭐ 限制最多  碼
+            if (raw.length >= 12) {
+                Toast.makeText(this, "最多 12 碼", Toast.LENGTH_SHORT).show()
+                return
+            }
 
             val newValue = raw + num
             binding.addbillTietAmount.setText("%,d".format(newValue.toLong()))

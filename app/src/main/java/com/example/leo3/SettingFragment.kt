@@ -35,9 +35,6 @@ class SettingFragment : Fragment() {
 
 
 
-//        val sp = requireContext().getSharedPreferences("user", AppCompatActivity.MODE_PRIVATE)
-//        val account = sp.getString("account", null)
-
         val account= UserManager.getAccount(requireContext())
         binding.settingFragmentUserInfoEmail.text=account
 

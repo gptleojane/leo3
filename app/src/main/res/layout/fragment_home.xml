@@ -17,9 +17,8 @@
         android:orientation="horizontal"
         android:paddingBottom="12dp">
 
-        <!-- 月 / 年 切換 -->
         <ImageView
-            android:id="@+id/home_switch_mode"
+            android:id="@+id/home_iv"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginRight="20dp"
@@ -195,6 +194,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:overScrollMode="always"
+        android:scrollbars="vertical"
         android:clipToPadding="false" />
 
 </LinearLayout>

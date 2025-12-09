@@ -41,6 +41,19 @@
 
     <color name="number_pad_button_bg">#333333</color>
 
+    <!-- 支出（深紅） -->
+    <color name="expense_red_light">#D04243</color>          <!-- 背景色深 -->
+    <color name="expense_red_stroke_light">#B73838</color>   <!-- 描邊更深 -->
+
+    <!-- 收入（深藍） -->
+    <color name="income_blue_light">#3C78C5</color>          <!-- 背景色深 -->
+    <color name="income_blue_stroke_light">#3165A8</color>   <!-- 描邊更深 -->
+
+
+
+
+
+
 
 </resources>
 

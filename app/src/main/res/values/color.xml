@@ -41,6 +41,18 @@
 
     <color name="number_pad_button_bg">#EEEEEE</color>
 
+    <!-- 支出（紅） -->
+    <color name="expense_red_light">#FF6F70</color>
+    <color name="expense_red_stroke_light">#E85C5C</color>
+
+    <!-- 收入（藍） -->
+    <color name="income_blue_light">#64A7F6</color>
+    <color name="income_blue_stroke_light">#4F8EDB</color>
+
+
+
+
+
 
 </resources>
 
