@@ -1,4 +1,4 @@
-package com.example.leo3.ui
+package com.example.leo3.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,11 +6,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.leo3.R
 import com.example.leo3.databinding.HomeItemHeaderBinding
 import com.example.leo3.databinding.HomeItemBillBinding
-import com.example.leo3.ui.model.Bill
-import com.example.leo3.ui.model.HomeUiModel
+import com.example.leo3.data.model.Bill
+import com.example.leo3.data.model.RecordUiModel
 
-class HomeAdapter(
-    private val list: List<HomeUiModel>
+class RecordAdapter(
+    private val list: List<RecordUiModel>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -20,8 +20,8 @@ class HomeAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (list[position]) {
-            is HomeUiModel.Header -> TYPE_HEADER
-            is HomeUiModel.Item -> TYPE_ITEM
+            is RecordUiModel.Header -> TYPE_HEADER
+            is RecordUiModel.Item -> TYPE_ITEM
         }
     }
 
@@ -47,10 +47,10 @@ class HomeAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (val item = list[position]) {
 
-            is HomeUiModel.Header ->
+            is RecordUiModel.Header ->
                 (holder as HeaderViewHolder).bind(item)
 
-            is HomeUiModel.Item ->
+            is RecordUiModel.Item ->
                 (holder as ItemViewHolder).bind(item.bill)
         }
     }
@@ -62,7 +62,7 @@ class HomeAdapter(
         private val binding: HomeItemHeaderBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(data: HomeUiModel.Header) {
+        fun bind(data: RecordUiModel.Header) {
             binding.homeHeaderDate.text = "${data.date} 星期${weekName(data.weekDay)}"
             binding.homeHeaderTotal.text =
                 if (data.totalAmount >= 0) "$${data.totalAmount}"

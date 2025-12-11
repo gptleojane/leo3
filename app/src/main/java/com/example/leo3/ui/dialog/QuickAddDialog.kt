@@ -1,14 +1,14 @@
-package com.example.leo3
+package com.example.leo3.ui.dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.DialogFragment
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
+import com.example.leo3.data.firebase.FirestoreHelper
 import com.example.leo3.databinding.QuickAddDialogAddBinding
 import com.example.leo3.util.UserManager
-import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Calendar
 
 class QuickAddDialog : DialogFragment() {
@@ -80,6 +80,7 @@ class QuickAddDialog : DialogFragment() {
 
     private fun save(type: String) {
         val amountStr = binding.qaddTietAmount.text.toString().replace(",", "")
+
         if (amountStr.isEmpty()) {
             Toast.makeText(requireContext(), "請輸入金額", Toast.LENGTH_SHORT).show()
             return
@@ -96,18 +97,14 @@ class QuickAddDialog : DialogFragment() {
 
         val account = UserManager.getAccount(requireContext()) ?: return
 
-        // 取得未分類 ID
-        val categoryRef = FirebaseFirestore.getInstance()
-            .collection("users")
-            .document(account)
-            .collection("categories")
-            .whereEqualTo("type", type)
-            .whereEqualTo("name", "未分類")
-            .limit(1)
+        // ⭐ 第 1 步：取得同類型的所有分類（包含未分類）
+        FirestoreHelper.getCategories(account, type) { list ->
 
-        categoryRef.get().addOnSuccessListener { qs ->
-            val catId = qs.documents.firstOrNull()?.id ?: ""
+            // 找到「未分類」
+            val defaultCategoryId =
+                list.firstOrNull { it.name == "未分類" }?.id ?: ""
 
+            // ⭐ 第 2 步：決定要新增的資料內容
             val billData = hashMapOf(
                 "type" to type,
                 "amount" to amount,
@@ -117,24 +114,16 @@ class QuickAddDialog : DialogFragment() {
                 "month" to month,
                 "day" to day,
                 "weekDay" to weekDay,
-                "categoryId" to catId
+                "categoryId" to defaultCategoryId
             )
 
-            FirebaseFirestore.getInstance()
-                .collection("users")
-                .document(account)
-                .collection("bills")
-                .add(billData)
-                .addOnSuccessListener {
-                    Toast.makeText(requireContext(), "新增成功", Toast.LENGTH_SHORT).show()
+            // ⭐ 第 3 步：新增資料
+            FirestoreHelper.addBill(account, billData) {
+                Toast.makeText(requireContext(), "新增成功", Toast.LENGTH_SHORT).show()
 
-                    onAdded?.invoke()
-
-                    dismiss()
-                }
-                .addOnFailureListener {
-                    Toast.makeText(requireContext(), "新增失敗", Toast.LENGTH_SHORT).show()
-                }
+                onAdded?.invoke()
+                dismiss()
+            }
         }
     }
 

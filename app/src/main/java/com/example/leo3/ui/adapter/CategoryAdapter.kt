@@ -1,11 +1,11 @@
-package com.example.leo3.ui
+package com.example.leo3.ui.adapter
 
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.leo3.databinding.CategoryItemBinding
-import com.example.leo3.ui.model.CategoryItem
+import com.example.leo3.data.model.CategoryItem
 
 class CategoryAdapter(
     private val list: List<CategoryItem>,

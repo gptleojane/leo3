@@ -6,19 +6,19 @@
         android:icon="@drawable/app_icon"
         android:theme="@style/Theme.Leo3">
         <activity
-            android:name=".ChangePasswordActivity"
+            android:name=".ui.activity.ChangePasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".AddBillActivity"
+            android:name=".ui.activity.AddBillActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".ui.activity.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.activity.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

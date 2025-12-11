@@ -1,278 +1,273 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_main"
+    android:orientation="vertical"
     android:paddingLeft="8dp"
-    android:paddingRight="8dp"
-    android:background="@color/bg_main">
+    android:paddingRight="8dp">
 
+    <!-- 目前登入者狀態欄 -->
     <LinearLayout
+        android:id="@+id/setting_fragment_userInfo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="72dp"
+        android:background="@color/bg_main"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
 
-        <!-- 目前登入者狀態欄 -->
-        <LinearLayout
-            android:id="@+id/setting_fragment_userInfo"
-            android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:background="@color/bg_main"
-            android:gravity="center_vertical">
+        <!-- 頭像（支援深/淺色） -->
+        <ImageView
+            android:id="@+id/setting_fragment_userInfo_avatar"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:clipToOutline="true"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            android:src="@drawable/app_icon" />
 
-            <!-- 頭像（支援深/淺色） -->
-            <ImageView
-                android:id="@+id/setting_fragment_userInfo_avatar"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/app_icon"
-                android:contentDescription="@null"
-                android:scaleType="centerCrop"
-                android:clipToOutline="true" />
-
-            <!-- 登入者帳號文字（深/淺模式自動切換） -->
-            <TextView
-                android:id="@+id/setting_fragment_userInfo_email"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="12dp"
-                android:text="user@example.com"
-                android:textSize="18sp"
-                android:textColor="@color/text_primary" />
-
-        </LinearLayout>
-
-
-        <!-- 分隔線 -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider"
-            android:layout_marginBottom="12dp" />
-
-
-        <!-- 分類：個人化設定 -->
+        <!-- 登入者帳號文字（深/淺模式自動切換） -->
         <TextView
+            android:id="@+id/setting_fragment_userInfo_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:text="@string/personalize"
-            android:textColor="@color/text_hint"
-            android:textSize="12sp" />
-
-        <!-- 外觀主題 -->
-        <LinearLayout
-            android:id="@+id/setting_fragment_personalize_themeSwitch"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:gravity="center_vertical"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground">
-
-            <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:contentDescription="@null"
-                android:src="@drawable/app_icon" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="12dp"
-                android:text="@string/personalize_themeSwitch"
-                android:textSize="18sp"
-                android:textColor="@color/text_primary" />
-        </LinearLayout>
-
-        <!-- 密碼修改 -->
-        <LinearLayout
-            android:id="@+id/setting_fragment_personalize_changePassword"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:gravity="center_vertical"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground">
-
-            <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:contentDescription="@null"
-                android:src="@drawable/app_icon" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="12dp"
-                android:text="@string/personalize_changePassword"
-                android:textSize="18sp"
-                android:textColor="@color/text_primary" />
-        </LinearLayout>
-
-        <!-- 登出帳號 -->
-        <LinearLayout
-            android:id="@+id/setting_fragment_personalize_signOut"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:gravity="center_vertical"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground">
-
-            <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:contentDescription="@null"
-                android:src="@drawable/app_icon" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="12dp"
-                android:text="@string/personalize_signOut"
-                android:textSize="18sp"
-                android:textColor="@color/text_primary" />
-        </LinearLayout>
-
-        <!-- 分隔線 -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp" />
-
-        <!-- 分類：功能設定 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:text="@string/set"
-            android:textColor="@color/text_hint"
-            android:textSize="12sp" />
-
-        <!-- 新增分類 -->
-        <LinearLayout
-            android:id="@+id/setting_fragment_set_addCategories"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:gravity="center_vertical"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground">
-
-            <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:contentDescription="@null"
-                android:src="@drawable/app_icon" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="12dp"
-                android:text="新增分類"
-                android:textSize="18sp"
-                android:textColor="@color/text_primary" />
-        </LinearLayout>
-
-        <!-- 最新匯率 -->
-        <LinearLayout
-            android:id="@+id/setting_fragment_set_exchangeRate"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:gravity="center_vertical"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground">
-
-            <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:contentDescription="@null"
-                android:src="@drawable/app_icon" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="12dp"
-                android:text="最新匯率"
-                android:textSize="18sp"
-                android:textColor="@color/text_primary" />
-        </LinearLayout>
-
-        <!-- 匯出資料 -->
-        <LinearLayout
-            android:id="@+id/setting_fragment_set_exportData"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:gravity="center_vertical"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground">
-
-            <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:contentDescription="@null"
-                android:src="@drawable/app_icon" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="12dp"
-                android:text="@string/set_exportData"
-                android:textSize="18sp"
-                android:textColor="@color/text_primary" />
-        </LinearLayout>
-
-
-        <!-- 分隔線 -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider"
-            android:layout_marginVertical="12dp" />
-
-        <!-- 分類：其他 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:text="@string/other"
-            android:textColor="@color/text_hint"
-            android:textSize="12sp" />
-
-        <!-- 關於 -->
-        <LinearLayout
-            android:id="@+id/setting_fragment_other_about"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:gravity="center_vertical"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground">
-
-            <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:contentDescription="@null"
-                android:src="@drawable/app_icon" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="12dp"
-                android:text="@string/other_about"
-                android:textSize="18sp"
-                android:textColor="@color/text_primary" />
-        </LinearLayout>
+            android:paddingStart="12dp"
+            android:text="user@example.com"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp" />
 
     </LinearLayout>
-</ScrollView>
+
+
+    <!-- 分隔線 -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/divider" />
+
+
+    <!-- 分類：個人化設定 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:text="@string/personalize"
+        android:textColor="@color/text_hint"
+        android:textSize="12sp" />
+
+    <!-- 外觀主題 -->
+    <LinearLayout
+        android:id="@+id/setting_fragment_personalize_themeSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:contentDescription="@null"
+            android:src="@drawable/app_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:text="@string/personalize_themeSwitch"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <!-- 密碼修改 -->
+    <LinearLayout
+        android:id="@+id/setting_fragment_personalize_changePassword"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:contentDescription="@null"
+            android:src="@drawable/app_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:text="@string/personalize_changePassword"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <!-- 登出帳號 -->
+    <LinearLayout
+        android:id="@+id/setting_fragment_personalize_signOut"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:contentDescription="@null"
+            android:src="@drawable/app_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:text="@string/personalize_signOut"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <!-- 分隔線 -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/divider" />
+
+    <!-- 分類：功能設定 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:text="@string/set"
+        android:textColor="@color/text_hint"
+        android:textSize="12sp" />
+
+    <!-- 新增分類 -->
+    <LinearLayout
+        android:id="@+id/setting_fragment_set_addCategories"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:contentDescription="@null"
+            android:src="@drawable/app_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:text="新增分類"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <!-- 最新匯率 -->
+    <LinearLayout
+        android:id="@+id/setting_fragment_set_exchangeRate"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:contentDescription="@null"
+            android:src="@drawable/app_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:text="最新匯率"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <!-- 匯出資料 -->
+    <LinearLayout
+        android:id="@+id/setting_fragment_set_exportData"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:contentDescription="@null"
+            android:src="@drawable/app_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:text="@string/set_exportData"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+
+    <!-- 分隔線 -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="12dp"
+        android:background="@color/divider" />
+
+    <!-- 分類：其他 -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:text="@string/other"
+        android:textColor="@color/text_hint"
+        android:textSize="12sp" />
+
+    <!-- 關於 -->
+    <LinearLayout
+        android:id="@+id/setting_fragment_other_about"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:contentDescription="@null"
+            android:src="@drawable/app_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:text="@string/other_about"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp" />
+    </LinearLayout>
+</LinearLayout>

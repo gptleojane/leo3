@@ -1,4 +1,4 @@
-package com.example.leo3.ui.model
+package com.example.leo3.data.model
 
 data class CategoryItem(
     val id: String,

@@ -1,15 +1,20 @@
-package com.example.leo3
+package com.example.leo3.ui.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.coordinatorlayout.widget.CoordinatorLayout
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.leo3.databinding.ActivityMainBinding
 import androidx.fragment.app.Fragment
+import com.example.leo3.R
+import com.example.leo3.databinding.ActivityMainBinding
+import com.example.leo3.ui.dialog.QuickAddDialog
+import com.example.leo3.ui.fragment.HomeFragment
+import com.example.leo3.ui.fragment.RecordFragment
+import com.example.leo3.ui.fragment.SettingFragment
+import com.example.leo3.ui.fragment.StatFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -51,14 +56,19 @@ class MainActivity : AppCompatActivity() {
 
             val dialog = QuickAddDialog()
             dialog.onAdded = {
-                val homeFragment = supportFragmentManager
-                    .findFragmentById(R.id.main_fragment) as? HomeFragment
 
-                homeFragment?.refreshData()
+                // 找出目前顯示的 Fragment
+                val currentFragment = supportFragmentManager.findFragmentById(R.id.main_fragment)
+
+                // 如果目前頁面是 RecordFragment → 重新載入資料
+                if (currentFragment is RecordFragment) {
+                    currentFragment.refreshData()
+                }
             }
 
             dialog.show(supportFragmentManager, "quick_add_dialog")
         }
+
 
         // FAB 長按：完整記帳
         binding.mainFabAdd.setOnLongClickListener {

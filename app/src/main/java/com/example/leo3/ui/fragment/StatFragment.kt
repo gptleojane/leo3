@@ -1,4 +1,4 @@
-package com.example.leo3
+package com.example.leo3.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -1,10 +1,12 @@
-package com.example.leo3.ui.model
+package com.example.leo3.data.model
+
+import com.google.firebase.Timestamp
 
 data class Bill(
     val type: String = "",
     val amount: Int = 0,
     val note: String = "",
-    val date: com.google.firebase.Timestamp? = null,
+    val date: Timestamp? = null,
     val year: Int = 0,
     val month: Int = 0,
     val day: Int = 0,
