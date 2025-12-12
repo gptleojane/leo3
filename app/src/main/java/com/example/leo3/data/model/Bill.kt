@@ -4,7 +4,7 @@ import com.google.firebase.Timestamp
 
 data class Bill(
     val type: String = "",
-    val amount: Int = 0,
+    val amount: Long = 0,
     val note: String = "",
     val date: Timestamp? = null,
     val year: Int = 0,

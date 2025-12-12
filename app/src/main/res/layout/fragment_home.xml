@@ -69,6 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="今日支出"
+                android:textSize="20sp"
                 android:textColor="@color/expense_red_light" />
 
             <TextView
@@ -77,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:text="$0"
                 android:textColor="@color/expense_red_light"
-                android:textSize="22sp"
+                android:textSize="28sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -92,6 +93,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="今日收入"
+                android:textSize="20sp"
                 android:textColor="@color/income_blue_light" />
 
             <TextView
@@ -100,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:text="$0"
                 android:textColor="@color/income_blue_light"
-                android:textSize="22sp"
+                android:textSize="28sp"
                 android:textStyle="bold" />
         </LinearLayout>
 

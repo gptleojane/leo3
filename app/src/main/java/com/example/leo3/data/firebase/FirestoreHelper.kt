@@ -2,7 +2,6 @@ package com.example.leo3.data.firebase
 
 import com.example.leo3.data.model.Bill
 import com.example.leo3.data.model.CategoryItem
-import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 

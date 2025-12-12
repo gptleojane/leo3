@@ -4,17 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import com.example.leo3.R
 import com.example.leo3.data.firebase.FirestoreHelper
-import com.example.leo3.data.model.Bill
 import com.example.leo3.databinding.FragmentHomeBinding
+import com.example.leo3.databinding.HomeItemBillBinding
 import com.example.leo3.util.UserManager
 import java.util.Calendar
-class HomeFragment : Fragment() {
 
+class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
@@ -43,103 +42,128 @@ class HomeFragment : Fragment() {
 
         binding.homeShowToday.text = "今天是 ${year}年${month}月${day}日 星期${week}"
 
-        // 取得收支資料
-        loadTodayBills(account, year, month, day)
+        loadTodaySummary(account, year, month, day)
+
+        loadTodayLatestThree(account, year, month, day)
+
+
     }
 
-    // -----------------------
-// 取得今日所有帳單（修正版）
-// -----------------------
-    private fun loadTodayBills(account: String, year: Int, month: Int, day: Int) {
+    private fun loadTodaySummary(account: String, year: Int, month: Int, day: Int) {
 
-        // 第 1 步：先抓分類 map（id -> name）
+        FirestoreHelper.getBillsByMonth(account, year, month) { monthBills ->
+
+            val todayBills = monthBills.filter { it.day == day }
+
+            val incomeTotal = todayBills
+                .filter { it.type == "income" }
+                .sumOf { it.amount }
+
+            val expenseTotal = todayBills
+                .filter { it.type == "expense" }
+                .sumOf { it.amount }
+
+            val totalCount = todayBills.size
+
+            val balance = incomeTotal - expenseTotal
+
+            binding.homeExpenseAmount.text = "$ $expenseTotal"
+            binding.homeIncomeAmount.text = "$ $incomeTotal"
+            binding.homeExpenseLabel.text = "$ $expenseTotal"
+            binding.homeIncomeLabel.text = "$ $incomeTotal"
+            binding.homeBalanceLabel.text = "$ $balance"
+
+            if (totalCount == 0) {
+                binding.homeRecordHint.text = "今日還沒記帳哦 !"
+            } else {
+                binding.homeRecordHint.text = "今日已記帳 ${totalCount} 筆"
+            }
+
+            // ===== STEP 3：更新收支比例條（Guideline） =====
+
+            val totalAmount = incomeTotal + expenseTotal
+
+            val expensePercent = if (totalAmount == 0L) {
+                0.5f   // 沒有任何帳時，分界線置中
+            } else {
+                expenseTotal.toFloat() / totalAmount.toFloat()
+            }
+
+            // 動態更新 Guideline 位置
+            val params = binding.homeBarGuideline.layoutParams
+                    as androidx.constraintlayout.widget.ConstraintLayout.LayoutParams
+
+            params.guidePercent = expensePercent
+            binding.homeBarGuideline.layoutParams = params
+
+
+
+        }
+    }
+    private fun loadTodayLatestThree(account: String, year: Int, month: Int, day: Int) {
+
+        // 1️⃣ 先清空（避免重新進頁時重複加）
+        binding.homeLatest3Container.removeAllViews()
+
+        // 2️⃣ 先抓分類（為了顯示分類名稱）
         FirestoreHelper.getAllCategories(account) { categories ->
 
-            val categoryMap = categories.associate { it.id to it.name }
+            // categoryId -> CategoryItem
+            val categoryMap = categories.associateBy { it.id }
 
-            // 第 2 步：抓今日最新三筆
-            FirestoreHelper.getTodayThreeBills(account, year, month, day) { latestThree ->
+            // 3️⃣ 再抓今天最新三筆
+            FirestoreHelper.getTodayThreeBills(account, year, month, day) { bills ->
+                android.util.Log.d("HomeFragment", "Today bills size = ${bills.size}")
 
-                // 替最新三筆補上 categoryName
-                val latestFixed = latestThree.map { b ->
-                    b.categoryName = categoryMap[b.categoryId] ?: ""
-                    b
+                if (bills.isEmpty()) {
+                    // 今天沒帳 → 整塊隱藏
+                    binding.homeRecentTitle.visibility = View.GONE
+                    binding.homeLatest3Container.visibility = View.GONE
+                    return@getTodayThreeBills
                 }
 
-                // 第 3 步：抓這個月全部帳單
-                FirestoreHelper.getBillsByMonth(account, year, month) { monthBills ->
+                binding.homeRecentTitle.visibility = View.VISIBLE
+                binding.homeLatest3Container.visibility = View.VISIBLE
 
-                    // 補上分類名稱
-                    val fixedBills = monthBills.map { b ->
-                        b.categoryName = categoryMap[b.categoryId] ?: ""
-                        b
-                    }
+                // 4️⃣ 一筆一筆用 ViewBinding 塞進來
+                for (bill in bills) {
 
-                    val todayBills = fixedBills.filter { it.day == day }
+                    // ★ 用 ViewBinding inflate item
+                    val itemBinding = HomeItemBillBinding.inflate(
+                        layoutInflater,
+                        binding.homeLatest3Container,
+                        false
+                    )
 
-                    val totalExpense = todayBills.filter { it.type == "expense" }.sumOf { it.amount }
-                    val totalIncome = todayBills.filter { it.type == "income" }.sumOf { it.amount }
-                    val balance = totalIncome - totalExpense
+                    // ===== 沿用 RecordFragment Adapter 的邏輯 =====
 
-                    // 更新數字
-                    binding.homeExpenseAmount.text = "$$totalExpense"
-                    binding.homeIncomeAmount.text = "$$totalIncome"
-                    binding.homeBalanceLabel.text = "$balance"
+                    // 1. 分類文字
+                    val categoryName =
+                        categoryMap[bill.categoryId]?.name ?: "未分類"
+                    itemBinding.homeBillCategory.text = categoryName
 
-                    // 更新提示文字
-                    binding.homeRecordHint.text = if (todayBills.isEmpty()) {
-                        "今日還沒有記帳喔！"
+                    // 2. note（空白就顯示空）
+                    itemBinding.homeBillName.text = bill.note.ifBlank { "" }
+
+                    // 3. 金額
+                    itemBinding.homeBillAmount.text = "$${bill.amount}"
+
+                    // 4. 根據支出 / 收入 套背景
+                    val bgRes = if (bill.type == "expense") {
+                        R.drawable.bg_expense_circle
                     } else {
-                        "今日已記帳 ${todayBills.size} 筆"
+                        R.drawable.bg_income_circle
                     }
+                    itemBinding.homeBillIcon.setBackgroundResource(bgRes)
 
-                    // 更新比例條
-                    updateBar(totalExpense, totalIncome)
-
-                    // 更新最新三筆
-                    showLatestThree(latestFixed)
+                    // 5️⃣ 加進容器
+                    binding.homeLatest3Container.addView(itemBinding.root)
                 }
             }
         }
     }
 
 
-    // -----------------------
-    // 更新收支比例條
-    // -----------------------
-    private fun updateBar(expense: Int, income: Int) {
-        val total = expense + income
-        val percent = if (total == 0) 0.5f else expense.toFloat() / total
-
-        val params =
-            binding.homeBarGuideline.layoutParams as ConstraintLayout.LayoutParams
-
-        params.guidePercent = percent
-        binding.homeBarGuideline.layoutParams = params
-    }
-
-
-
-    // -----------------------
-    // 顯示今日最新三筆（非 RecyclerView）
-    // -----------------------
-    private fun showLatestThree(list: List<Bill>) {
-        val container = binding.homeLatest3Container
-        container.removeAllViews()
-
-        val inflater = LayoutInflater.from(requireContext())
-
-        list.forEach { bill ->
-            val view = inflater.inflate(com.example.leo3.R.layout.item_home_latest3, container, false)
-
-            view.findViewById<TextView>(com.example.leo3.R.id.itemLatestName).text =
-                bill.note.ifBlank { bill.categoryName }
-            view.findViewById<TextView>(com.example.leo3.R.id.itemLatestAmount).text =
-                if (bill.type == "expense") "-${bill.amount}" else "+${bill.amount}"
-
-            container.addView(view)
-        }
-    }
 
     private fun weekName(day: Int): String {
         return when (day) {
