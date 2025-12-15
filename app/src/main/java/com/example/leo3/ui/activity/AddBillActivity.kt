@@ -13,6 +13,7 @@ import com.example.leo3.data.firebase.FirestoreHelper
 import com.example.leo3.data.model.CategoryItem
 import com.example.leo3.databinding.ActivityAddBillBinding
 import com.example.leo3.ui.adapter.CategoryAdapter
+import com.example.leo3.util.DataVersionManager
 import com.example.leo3.util.UserManager
 import java.util.Calendar
 
@@ -146,6 +147,7 @@ class AddBillActivity : AppCompatActivity() {
         // ⭐ 使用 FirestoreHelper
         FirestoreHelper.addBill(account, billData) {
             Toast.makeText(this, "新增成功", Toast.LENGTH_SHORT).show()
+            DataVersionManager.updateDataVersion()
             finish()
         }
     }

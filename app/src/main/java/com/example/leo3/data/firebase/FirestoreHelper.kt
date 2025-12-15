@@ -168,6 +168,22 @@ object FirestoreHelper {
         batch.commit().addOnSuccessListener { onSuccess() }
     }
 
+    fun getBillsByYear(
+        account: String,
+        year: Int,
+        onResult: (List<Bill>) -> Unit
+    ) {
+        db.collection("users")
+            .document(account)
+            .collection("bills")
+            .whereEqualTo("year", year)
+            .get()
+            .addOnSuccessListener { qs ->
+                onResult(qs.toObjects(Bill::class.java))
+            }
+    }
+
+
 
 
 }

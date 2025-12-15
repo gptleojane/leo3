@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.leo3.data.firebase.FirestoreHelper
 import com.example.leo3.databinding.QuickAddDialogAddBinding
+import com.example.leo3.util.DataVersionManager
 import com.example.leo3.util.UserManager
 import java.util.Calendar
 
@@ -121,6 +122,7 @@ class QuickAddDialog : DialogFragment() {
             FirestoreHelper.addBill(account, billData) {
                 Toast.makeText(requireContext(), "新增成功", Toast.LENGTH_SHORT).show()
 
+                DataVersionManager.updateDataVersion()
                 onAdded?.invoke()
                 dismiss()
             }

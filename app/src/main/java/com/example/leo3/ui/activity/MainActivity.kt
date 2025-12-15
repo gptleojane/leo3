@@ -15,11 +15,16 @@ import com.example.leo3.ui.fragment.HomeFragment
 import com.example.leo3.ui.fragment.RecordFragment
 import com.example.leo3.ui.fragment.SettingFragment
 import com.example.leo3.ui.fragment.StatFragment
+import com.example.leo3.util.DataVersionManager
 
 class MainActivity : AppCompatActivity() {
-
-    //    省去findViewById必要的宣告
     private lateinit var binding: ActivityMainBinding
+
+    private val homeFragment = HomeFragment()
+    private val recordFragment = RecordFragment()
+    private val statFragment = StatFragment()
+    private val settingFragment = SettingFragment()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,36 +40,42 @@ class MainActivity : AppCompatActivity() {
         }
 //        預設首頁
         if (savedInstanceState == null) {
-            replaceFragment(HomeFragment())
+            replaceFragment(homeFragment)
         }
-
 
         // Bottom Nav 切換 Fragment
         binding.mainBottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_home -> replaceFragment(HomeFragment())
-                R.id.nav_record -> replaceFragment(RecordFragment())
-                R.id.nav_stat -> replaceFragment(StatFragment())
-                R.id.nav_setting -> replaceFragment(SettingFragment())
+                R.id.nav_home -> replaceFragment(homeFragment)
+                R.id.nav_record -> replaceFragment(recordFragment)
+                R.id.nav_stat -> replaceFragment(statFragment)
+                R.id.nav_setting -> replaceFragment(settingFragment)
             }
             true
         }
 
+
         // FAB 短按：快速記帳
         binding.mainFabAdd.setOnClickListener {
-            Toast.makeText(this, "長按進入完整記帳", Toast.LENGTH_SHORT).show()
 
             val dialog = QuickAddDialog()
             dialog.onAdded = {
 
-                // 找出目前顯示的 Fragment
-                val currentFragment = supportFragmentManager.findFragmentById(R.id.main_fragment)
+                //  更新全域資料版本
+                DataVersionManager.updateDataVersion()
 
-                // 如果目前頁面是 RecordFragment → 重新載入資料
-                if (currentFragment is RecordFragment) {
-                    currentFragment.refreshData()
+                //  找出目前顯示的 Fragment
+                val currentFragment =
+                    supportFragmentManager.findFragmentById(R.id.main_fragment)
+
+                when (currentFragment) {
+                    is HomeFragment -> currentFragment.refreshIfVersionChanged()
+                    is RecordFragment -> currentFragment.refreshIfVersionChanged()
+                    is StatFragment -> currentFragment.refreshIfVersionChanged()
                 }
+
             }
+
 
             dialog.show(supportFragmentManager, "quick_add_dialog")
         }
@@ -84,4 +95,6 @@ class MainActivity : AppCompatActivity() {
             .replace(R.id.main_fragment, fragment)
             .commit()
     }
+
+
 }
