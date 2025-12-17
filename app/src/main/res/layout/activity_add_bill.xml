@@ -113,7 +113,7 @@
             android:id="@+id/addbill_tiet_amount"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="number"
+            android:focusable="false"
             android:textColor="@color/text_primary"
             android:textColorHint="@color/text_hint" />
     </com.google.android.material.textfield.TextInputLayout>

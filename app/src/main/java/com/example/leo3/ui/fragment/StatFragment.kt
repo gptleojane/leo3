@@ -12,7 +12,6 @@ import com.example.leo3.data.model.Bill
 import com.example.leo3.data.model.CategoryStatItem
 import com.example.leo3.databinding.FragmentStatBinding
 import com.example.leo3.ui.adapter.StatCategoryAdapter
-import com.example.leo3.util.DataVersionManager
 import com.example.leo3.util.UserManager
 import java.util.Calendar
 
@@ -20,8 +19,6 @@ class StatFragment : Fragment() {
 
     private var _binding: FragmentStatBinding? = null
     private val binding get() = _binding!!
-
-    private var lastDataVersion = -1
 
     private var currentYear = 0
     private var currentMonth : Int? = null
@@ -39,19 +36,17 @@ class StatFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupUI()
-        refreshIfVersionChanged()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        refreshIfVersionChanged()
+        reload()
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun reload() {
+        loadStatData()
     }
 
     private fun setupUI() {
@@ -79,14 +74,6 @@ class StatFragment : Fragment() {
         showStatResult(emptyList(), emptyList(), 0, 0)
     }
 
-    //    版本更改後刷新
-    fun refreshIfVersionChanged() {
-        val dataVersion = DataVersionManager.getVersion()
-
-        if (lastDataVersion != dataVersion) {
-            loadStatData()
-        }
-    }
 
     private fun loadStatData(){
         val account = UserManager.getAccount(requireContext()) ?: return
@@ -97,7 +84,7 @@ class StatFragment : Fragment() {
 
             categoryMap = categories.associate { it.id to it.name }
 
-            // 2️⃣ 再抓帳單
+            //  再抓帳單
             if (currentMonth == null) {
                 loadYearBills(account, currentYear)
             } else {
@@ -160,7 +147,6 @@ class StatFragment : Fragment() {
             totalExpense,
             totalIncome
         )
-        lastDataVersion = DataVersionManager.getVersion()
     }
 
     private fun showStatResult(
@@ -196,7 +182,7 @@ class StatFragment : Fragment() {
             currentYear = item.title.toString().toInt()
             binding.statCurrentYear.text = "${currentYear}年"
 
-            loadStatData()
+            reload()
             true
         }
 
@@ -220,8 +206,7 @@ class StatFragment : Fragment() {
                 binding.statCurrentMonth.text = "${m}月"
                 m
             }
-
-            loadStatData()
+            reload()
             true
         }
 

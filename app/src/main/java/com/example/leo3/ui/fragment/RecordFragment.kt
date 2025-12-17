@@ -12,19 +12,17 @@ import com.example.leo3.data.model.Bill
 import com.example.leo3.data.model.RecordUiModel
 import com.example.leo3.databinding.FragmentRecordBinding
 import com.example.leo3.ui.adapter.RecordAdapter
-import com.example.leo3.util.DataVersionManager
 import com.example.leo3.util.UserManager
 import java.util.Calendar
+import kotlin.collections.filter
 
 class RecordFragment : Fragment() {
+
     private var _binding: FragmentRecordBinding? = null
     private val binding get() = _binding!!
 
-    private var lastDataVersion = -1
-
     private var categoryMap: Map<String, String> = emptyMap()
-    private var currentYear = 0
-    private var currentMonth = 0
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,14 +35,8 @@ class RecordFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setupUI()
-        refreshIfVersionChanged()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        refreshIfVersionChanged()
+        reload()
     }
 
     override fun onDestroyView() {
@@ -52,103 +44,79 @@ class RecordFragment : Fragment() {
         _binding = null
     }
 
-    // 初始化 UI
-    private fun setupUI(){
-        binding.recordRecyclerView.layoutManager =
-            LinearLayoutManager(requireContext())
+    fun reload() {
+        loadRecordData()
+    }
 
-        setToTodayYearMonth(updateUI = true)
+    private fun setupUI() {
+        binding.recordRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        binding.recordYearSelector.setOnClickListener {
-            showYearPopupMenu()
-        }
-
-        binding.recordMonthSelector.setOnClickListener {
-            showMonthPopupMenu()
-        }
+        binding.recordYearSelector.setOnClickListener { showYearPopupMenu() }
+        binding.recordMonthSelector.setOnClickListener { showMonthPopupMenu() }
 
         binding.recordIv.setOnClickListener {
-            setToTodayYearMonth(updateUI = true)
-            loadRecordData()
+            reload()
         }
     }
-
-    //    版本更改後刷新
-    fun refreshIfVersionChanged() {
-        val dataVersion = DataVersionManager.getVersion()
-
-        if (lastDataVersion != dataVersion) {
-            loadRecordData()
-        }
-    }
-
-
-    private fun loadRecordData() {
+    private fun loadRecordData(){
         val account = UserManager.getAccount(requireContext()) ?: return
+        val (year, month) = getTodayYearMonth()
+
+        // UI 永遠顯示當月
+        binding.recordCurrentYear.text = "${year}年"
+        binding.recordCurrentMonth.text = "${month}月"
 
         loadCategories(account) {
-            loadBills(account, currentYear, currentMonth)
+            loadBills(account, year, month)
         }
     }
 
-    // 分類
-    private fun loadCategories(
-        account: String,
-        onLoaded: () -> Unit
-    ) {
+
+    private fun loadCategories(account: String, onLoaded: () -> Unit) {
         FirestoreHelper.getAllCategories(account) { list ->
+            if (!isAdded || _binding == null) return@getAllCategories
             categoryMap = list.associate { it.id to it.name }
             onLoaded()
         }
     }
 
-
-    private fun loadBills(
-        account: String,
-        year: Int,
-        month: Int
-    ) {
+    private fun loadBills(account: String, year: Int, month: Int) {
         FirestoreHelper.getBillsByMonth(account, year, month) { bills ->
-
             if (!isAdded || _binding == null) return@getBillsByMonth
 
-            // 1️⃣ 補上分類名稱
-            bills.forEach { bill ->
-                bill.categoryName = categoryMap[bill.categoryId] ?: ""
+            bills.forEach {
+                it.categoryName = categoryMap[it.categoryId] ?: ""
             }
 
-            // 2️⃣ === 月統計計算 ===
-            val totalExpense = bills
-                .filter { it.type == "expense" }
-                .sumOf { it.amount }
-
-            val totalIncome = bills
-                .filter { it.type == "income" }
-                .sumOf { it.amount }
-
-            val balance = totalIncome - totalExpense
-
-            // 3️⃣ 更新上方 summary UI
-            binding.recordSummaryExpenseAmount.text = "$$totalExpense"
-            binding.recordSummaryIncomeAmount.text = "$$totalIncome"
-            binding.recordSummaryBalanceAmount.text = "$$balance"
-
-            // 4️⃣ RecyclerView
-            val uiList = buildUiList(bills)
-            binding.recordRecyclerView.adapter = RecordAdapter(uiList)
-
-            // 5️⃣ 同步版本（唯一位置）
-            lastDataVersion = DataVersionManager.getVersion()
+            updateRecordUI(bills)
         }
     }
 
+    // ===== 查詢用（不影響 reload 規則） =====
 
+    private fun loadBillsForQuery(account: String, year: Int, month: Int) {
+        loadCategories(account) {
+            loadBills(account, year, month)
+        }
+    }
 
-    // UI Model 組裝（Header + Item）
-    private fun buildUiList(
-        bills: List<Bill>
-    ): List<RecordUiModel> {
+    // 查詢其它月份：你要也可以保留，但「不存 cache」，且切回來會回當月
+    // ===== UI =====
 
+    private fun updateRecordUI(bills: List<Bill>) {
+        val totalExpense = bills.filter { it.type == "expense" }.sumOf { it.amount }
+        val totalIncome = bills.filter { it.type == "income" }.sumOf { it.amount }
+
+        binding.recordSummaryExpenseAmount.text = "$$totalExpense"
+        binding.recordSummaryIncomeAmount.text = "$$totalIncome"
+        binding.recordSummaryBalanceAmount.text =
+            "$${totalIncome - totalExpense}"
+
+        binding.recordRecyclerView.adapter =
+            RecordAdapter(buildUiList(bills))
+    }
+
+    private fun buildUiList(bills: List<Bill>): List<RecordUiModel> {
         if (bills.isEmpty()) return emptyList()
 
         val grouped = bills.groupBy {
@@ -157,81 +125,71 @@ class RecordFragment : Fragment() {
 
         val result = mutableListOf<RecordUiModel>()
 
-        grouped
-            .toSortedMap(compareByDescending { it })
-            .forEach { (_, dayBills) ->
+        grouped.toSortedMap(compareByDescending { it }).forEach { (_, dayBills) ->
+            val first = dayBills.first()
+            val total = dayBills.sumOf { it.amount }
 
-                val first = dayBills.first()
-                val total = dayBills.sumOf { it.amount }
-
-                // Header
-                result.add(
-                    RecordUiModel.Header(
-                        date = "${first.year}/${first.month}/${first.day}",
-                        weekDay = first.weekDay,
-                        totalAmount = total
-                    )
+            result.add(
+                RecordUiModel.Header(
+                    date = "${first.year}/${first.month}/${first.day}",
+                    weekDay = first.weekDay,
+                    totalAmount = total
                 )
+            )
 
-                // Items
-                dayBills
-                    .sortedByDescending{it.date}
-                    .forEach { bill ->
-                    result.add(RecordUiModel.Item(bill))
-                }
+            dayBills.sortedByDescending { it.date }.forEach {
+                result.add(RecordUiModel.Item(it))
             }
+        }
         return result
     }
 
+    // ===== Popup =====
 
     private fun showYearPopupMenu() {
-        val popup =
-            PopupMenu(requireContext(), binding.recordYearSelector)
+        val popup = PopupMenu(requireContext(), binding.recordYearSelector)
+        val nowYear = Calendar.getInstance().get(Calendar.YEAR)
 
-        val currentYearData = Calendar.getInstance().get(Calendar.YEAR)
-        val years = (currentYearData downTo currentYearData - 5).toList()
-
-        years.forEach { y ->
-            popup.menu.add(y.toString())
+        (nowYear downTo nowYear - 5).forEach {
+            popup.menu.add(it.toString())
         }
 
         popup.setOnMenuItemClickListener { item ->
+            val account =
+                UserManager.getAccount(requireContext()) ?: return@setOnMenuItemClickListener true
+            val year = item.title.toString().toInt()
+            val month = binding.recordCurrentMonth.text
+                .toString().replace("月", "").toInt()
 
-            currentYear = item.title.toString().toInt()
-            binding.recordCurrentYear.text = "${currentYear}年"
-
-            loadRecordData()
+            binding.recordCurrentYear.text = "${year}年"
+            loadBillsForQuery(account, year, month)
             true
         }
+
         popup.show()
     }
 
     private fun showMonthPopupMenu() {
-        val popup =
-            PopupMenu(requireContext(), binding.recordMonthSelector)
-
-        (1..12).forEach { m ->
-            popup.menu.add(m.toString())
-        }
+        val popup = PopupMenu(requireContext(), binding.recordMonthSelector)
+        (1..12).forEach { popup.menu.add(it.toString()) }
 
         popup.setOnMenuItemClickListener { item ->
+            val account =
+                UserManager.getAccount(requireContext()) ?: return@setOnMenuItemClickListener true
+            val year = binding.recordCurrentYear.text
+                .toString().replace("年", "").toInt()
+            val month = item.title.toString().toInt()
 
-            currentMonth = item.title.toString().toInt()
-            binding.recordCurrentMonth.text = "${currentMonth}月"
-
-            loadRecordData()
+            binding.recordCurrentMonth.text = "${month}月"
+            loadBillsForQuery(account, year, month)
             true
         }
+
         popup.show()
     }
-    private fun setToTodayYearMonth(updateUI: Boolean) {
-        val cal = Calendar.getInstance()
-        currentYear = cal.get(Calendar.YEAR)
-        currentMonth = cal.get(Calendar.MONTH) + 1
 
-        if (updateUI) {
-            binding.recordCurrentYear.text = "${currentYear}年"
-            binding.recordCurrentMonth.text = "${currentMonth}月"
-        }
+    private fun getTodayYearMonth(): Pair<Int, Int> {
+        val cal = Calendar.getInstance()
+        return cal.get(Calendar.YEAR) to (cal.get(Calendar.MONTH) + 1)
     }
 }

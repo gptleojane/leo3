@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.leo3.R
 import com.example.leo3.data.firebase.FirestoreHelper
+import com.example.leo3.data.model.Bill
 import com.example.leo3.databinding.FragmentHomeBinding
 import com.example.leo3.databinding.HomeItemBillBinding
-import com.example.leo3.util.DataVersionManager
 import com.example.leo3.util.UserManager
 import java.util.Calendar
 
@@ -17,7 +17,6 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private var lastDataVersion = -1
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,12 +31,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupUI()
-        refreshIfVersionChanged()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        refreshIfVersionChanged()
+        reload()
     }
 
     override fun onDestroyView() {
@@ -45,7 +39,12 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-    private fun setupUI(){
+//    供mainactivity呼叫重抓資料
+    fun reload() {
+        loadHomeData()
+    }
+
+    private fun setupUI() {
         val account = UserManager.getAccount(requireContext()) ?: ""
         binding.homeUserName.text = account
 
@@ -59,14 +58,8 @@ class HomeFragment : Fragment() {
         binding.homeShowToday.text = "今天是 ${year}年${month}月${day}日 星期${week}"
     }
 
-//    版本更改後刷新
-    fun refreshIfVersionChanged() {
-        val dataVersion = DataVersionManager.getVersion()
+    //  增修後通知重抓資料
 
-        if (lastDataVersion != dataVersion) {
-            loadHomeData()
-        }
-    }
     private fun loadHomeData() {
         val account = UserManager.getAccount(requireContext()) ?: return
 
@@ -110,7 +103,6 @@ class HomeFragment : Fragment() {
             }
 
 
-
             //收支比較條
             val totalAmount = incomeTotal + expenseTotal
 
@@ -129,11 +121,8 @@ class HomeFragment : Fragment() {
         }
     }
 
-//    今日最新三筆
+    //    今日最新三筆
     private fun loadTodayLatestThree(account: String, year: Int, month: Int, day: Int) {
-
-        //  清空避免重新進頁時重複加
-        binding.homeLatest3Container.removeAllViews()
 
         //  抓分類
         FirestoreHelper.getAllCategories(account) { categories ->
@@ -153,6 +142,8 @@ class HomeFragment : Fragment() {
                     binding.homeLatest3Container.visibility = View.GONE
                     return@getTodayThreeBills
                 }
+                //  清空避免重新進頁時重複加
+                binding.homeLatest3Container.removeAllViews()
 
                 binding.homeRecentTitle.visibility = View.VISIBLE
                 binding.homeLatest3Container.visibility = View.VISIBLE
@@ -184,9 +175,9 @@ class HomeFragment : Fragment() {
                     binding.homeLatest3Container.addView(itemBinding.root)
                 }
             }
-            lastDataVersion = DataVersionManager.getVersion()
         }
     }
+
     private fun weekName(day: Int): String {
         return when (day) {
             1 -> "日"

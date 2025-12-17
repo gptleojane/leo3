@@ -38,7 +38,7 @@ class SettingFragment : Fragment() {
 
         // 外觀主題
         binding.settingFragmentPersonalizeThemeSwitch.setOnClickListener {
-            toggleTheme()
+
         }
 
         binding.settingFragmentPersonalizeChangePassword.setOnClickListener {
@@ -76,17 +76,6 @@ class SettingFragment : Fragment() {
     }
 
 
-    private fun toggleTheme() {
-        val theme = UserManager.getTheme(requireContext())
-
-        if (theme=="dark") {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            UserManager.setTheme(requireContext(), "light") // 淺色
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            UserManager.setTheme(requireContext(), "dark") // 深色
-        }
-    }
 
 
 

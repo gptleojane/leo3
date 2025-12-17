@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -15,7 +16,6 @@ import com.example.leo3.ui.fragment.HomeFragment
 import com.example.leo3.ui.fragment.RecordFragment
 import com.example.leo3.ui.fragment.SettingFragment
 import com.example.leo3.ui.fragment.StatFragment
-import com.example.leo3.util.DataVersionManager
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -24,6 +24,24 @@ class MainActivity : AppCompatActivity() {
     private val recordFragment = RecordFragment()
     private val statFragment = StatFragment()
     private val settingFragment = SettingFragment()
+
+    //預設首頁
+    private var currentFragment: Fragment? = null
+
+//    建立一個Activity Result 接收器，讓跳轉頁面新增帳成功時，回傳RESULT_OK，才會reload該fragment
+    private val addBillLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+
+            // 這裡就是「接收 AddBillActivity 回傳狀態」的地方
+            if (result.resultCode == RESULT_OK) {
+                homeFragment.reload()
+                recordFragment.reload()
+                statFragment.reload()
+            }
+        }
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,62 +56,69 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(0, topInset, 0, 0)
             insets
         }
-//        預設首頁
+
+        //第一次進入main，show/hide建立全部fragment，並預設首頁home
         if (savedInstanceState == null) {
-            replaceFragment(homeFragment)
+            supportFragmentManager.beginTransaction()
+                .add(R.id.main_fragment, homeFragment)
+                .add(R.id.main_fragment, recordFragment).hide(recordFragment)
+                .add(R.id.main_fragment, statFragment).hide(statFragment)
+                .add(R.id.main_fragment, settingFragment).hide(settingFragment)
+                .commit()
+
+            currentFragment = homeFragment
         }
 
+        setupBottomNavUI()
+        setupFabUI()
+
+    }
+
+    private fun setupBottomNavUI(){
         // Bottom Nav 切換 Fragment
         binding.mainBottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_home -> replaceFragment(homeFragment)
-                R.id.nav_record -> replaceFragment(recordFragment)
-                R.id.nav_stat -> replaceFragment(statFragment)
-                R.id.nav_setting -> replaceFragment(settingFragment)
+                R.id.nav_home -> showHideFragment(homeFragment)
+                R.id.nav_record -> showHideFragment(recordFragment)
+                R.id.nav_stat -> showHideFragment(statFragment)
+                R.id.nav_setting -> showHideFragment(settingFragment)
             }
             true
         }
-
-
+    }
+    private fun setupFabUI(){
         // FAB 短按：快速記帳
         binding.mainFabAdd.setOnClickListener {
+
+            Toast.makeText(this, "長按進入完整記帳", Toast.LENGTH_SHORT).show()
 
             val dialog = QuickAddDialog()
             dialog.onAdded = {
 
-                //  更新全域資料版本
-                DataVersionManager.updateDataVersion()
-
-                //  找出目前顯示的 Fragment
-                val currentFragment =
-                    supportFragmentManager.findFragmentById(R.id.main_fragment)
-
-                when (currentFragment) {
-                    is HomeFragment -> currentFragment.refreshIfVersionChanged()
-                    is RecordFragment -> currentFragment.refreshIfVersionChanged()
-                    is StatFragment -> currentFragment.refreshIfVersionChanged()
-                }
-
+                homeFragment.reload()
+                recordFragment.reload()
+                statFragment.reload()
             }
-
-
             dialog.show(supportFragmentManager, "quick_add_dialog")
         }
-
 
         // FAB 長按：完整記帳
         binding.mainFabAdd.setOnLongClickListener {
             val intent = Intent(this, AddBillActivity::class.java)
-            startActivity(intent)
+            addBillLauncher.launch(intent)
             true
         }
     }
 
-    private fun replaceFragment(fragment: Fragment) {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.main_fragment, fragment)
-            .commit()
+    private fun showHideFragment(target: Fragment) {
+        if (currentFragment === target) return
+
+        supportFragmentManager.beginTransaction().apply {
+            currentFragment?.let { hide(it) }
+            show(target)
+        }.commit()
+
+        currentFragment = target
     }
 
 
