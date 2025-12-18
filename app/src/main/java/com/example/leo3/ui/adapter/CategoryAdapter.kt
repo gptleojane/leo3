@@ -46,6 +46,9 @@ class CategoryAdapter(
 
         // 點擊事件
         b.cardCategory.setOnClickListener {
+
+            if (position == selectedPos) return@setOnClickListener
+
             val oldPos = selectedPos
             selectedPos = position
 

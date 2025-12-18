@@ -60,30 +60,7 @@
         android:textColor="@color/text_hint"
         android:textSize="12sp" />
 
-    <!-- 外觀主題 -->
-    <LinearLayout
-        android:id="@+id/setting_fragment_personalize_themeSwitch"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackground"
-        android:gravity="center_vertical">
 
-        <ImageView
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:contentDescription="@null"
-            android:src="@drawable/app_icon" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="12dp"
-            android:text="@string/personalize_themeSwitch"
-            android:textColor="@color/text_primary"
-            android:textSize="18sp" />
-    </LinearLayout>
 
     <!-- 密碼修改 -->
     <LinearLayout
@@ -135,6 +112,29 @@
             android:textSize="18sp" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:contentDescription="@null"
+            android:src="@drawable/app_icon" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:text="清除資料"
+            android:textColor="@color/text_primary"
+            android:textSize="18sp" />
+    </LinearLayout>
+
     <!-- 分隔線 -->
     <View
         android:layout_width="match_parent"
@@ -173,35 +173,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="12dp"
-            android:text="新增分類"
+            android:text="新增與管理分類"
             android:textColor="@color/text_primary"
             android:textSize="18sp" />
     </LinearLayout>
 
-    <!-- 最新匯率 -->
-    <LinearLayout
-        android:id="@+id/setting_fragment_set_exchangeRate"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackground"
-        android:gravity="center_vertical">
 
-        <ImageView
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:contentDescription="@null"
-            android:src="@drawable/app_icon" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="12dp"
-            android:text="最新匯率"
-            android:textColor="@color/text_primary"
-            android:textSize="18sp" />
-    </LinearLayout>
 
     <!-- 匯出資料 -->
     <LinearLayout

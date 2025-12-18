@@ -10,7 +10,8 @@ import com.example.leo3.data.model.Bill
 import com.example.leo3.data.model.RecordUiModel
 
 class RecordAdapter(
-    private val list: List<RecordUiModel>
+    private val list: List<RecordUiModel>,
+    private val onItemClick: (Bill) -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     companion object {
@@ -78,6 +79,11 @@ class RecordAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(bill: Bill) {
+
+            // ★ 點擊事件
+            binding.root.setOnClickListener {
+                onItemClick(bill)
+            }
 
             // ★ 1. 左邊分類文字
             binding.homeBillCategory.text = bill.categoryName.ifBlank { "?" }

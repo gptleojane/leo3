@@ -1,5 +1,7 @@
 package com.example.leo3.ui.fragment
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,12 +13,17 @@ import com.example.leo3.data.firebase.FirestoreHelper
 import com.example.leo3.data.model.Bill
 import com.example.leo3.data.model.RecordUiModel
 import com.example.leo3.databinding.FragmentRecordBinding
+import com.example.leo3.ui.activity.EditBillActivity
 import com.example.leo3.ui.adapter.RecordAdapter
 import com.example.leo3.util.UserManager
 import java.util.Calendar
 import kotlin.collections.filter
 
 class RecordFragment : Fragment() {
+
+    companion object {
+        private const val REQ_EDIT = 1002
+    }
 
     private var _binding: FragmentRecordBinding? = null
     private val binding get() = _binding!!
@@ -112,8 +119,18 @@ class RecordFragment : Fragment() {
         binding.recordSummaryBalanceAmount.text =
             "$${totalIncome - totalExpense}"
 
+        val uiList = buildUiList(bills)
+
         binding.recordRecyclerView.adapter =
-            RecordAdapter(buildUiList(bills))
+            RecordAdapter(uiList) { bill ->
+
+                val intent =
+                    Intent(requireContext(), EditBillActivity::class.java)
+                intent.putExtra("billId", bill.id)
+
+                // ⭐ 重點：用 forResult
+                startActivityForResult(intent, REQ_EDIT)
+            }
     }
 
     private fun buildUiList(bills: List<Bill>): List<RecordUiModel> {
@@ -143,6 +160,19 @@ class RecordFragment : Fragment() {
         }
         return result
     }
+
+    override fun onActivityResult(
+        requestCode: Int,
+        resultCode: Int,
+        data: Intent?
+    ) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == REQ_EDIT && resultCode == Activity.RESULT_OK) {
+            reload()
+        }
+    }
+
 
     // ===== Popup =====
 

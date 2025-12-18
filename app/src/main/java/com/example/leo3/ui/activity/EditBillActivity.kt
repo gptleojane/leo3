@@ -11,14 +11,15 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.leo3.R
 import com.example.leo3.data.firebase.FirestoreHelper
 import com.example.leo3.data.model.CategoryItem
-import com.example.leo3.databinding.ActivityAddBillBinding
+import com.example.leo3.databinding.ActivityEditBillBinding
 import com.example.leo3.ui.adapter.CategoryAdapter
 import com.example.leo3.util.UserManager
+import com.google.firebase.Timestamp
 import java.util.Calendar
 
-class AddBillActivity : AppCompatActivity() {
+class EditBillActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityAddBillBinding
+    private lateinit var binding: ActivityEditBillBinding
 
     // 分類列表
     private val categoryList = mutableListOf<CategoryItem>()
@@ -31,7 +32,7 @@ class AddBillActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        binding = ActivityAddBillBinding.inflate(layoutInflater)
+        binding = ActivityEditBillBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
@@ -41,7 +42,7 @@ class AddBillActivity : AppCompatActivity() {
         }
 
         // RecyclerView 設定 3 欄
-        binding.addbillRecyclerView.layoutManager = GridLayoutManager(this, 3)
+        binding.editbillRecyclerView.layoutManager = GridLayoutManager(this, 3)
 
         //預設日期為今天，金額$0，類型為支出
         setupDefaultState()
@@ -54,15 +55,15 @@ class AddBillActivity : AppCompatActivity() {
         setupNumberPad()
 
 
-        binding.addbillBtAdd.setOnClickListener { addBill() }
+        binding.editbillBtEdit.setOnClickListener { addBill() }
 
-        binding.addbillBtBack.setOnClickListener { finish() }
+        binding.editbillBtBack.setOnClickListener { finish() }
     }
 
     private fun setupDefaultState() {
         // 預設日期
         val cal = today()
-        binding.addbillTietDate.setText(
+        binding.editbillTietDate.setText(
             "${cal.get(Calendar.YEAR)}/${cal.get(Calendar.MONTH) + 1}/${cal.get(Calendar.DAY_OF_MONTH)}"
         )
 
@@ -70,12 +71,12 @@ class AddBillActivity : AppCompatActivity() {
         renderAmount()
 
         // 預設支出
-        binding.addbillMbtgType.check(R.id.addbill_mb_expense)
+        binding.editbillMbtgType.check(R.id.addbill_mb_expense)
         loadCategories("expense")
     }
 
     private fun setupTypeToggle() {
-        binding.addbillMbtgType.addOnButtonCheckedListener { _, checkedId, isChecked ->
+        binding.editbillMbtgType.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (!isChecked) return@addOnButtonCheckedListener
 
             val type = if (checkedId == R.id.addbill_mb_expense) "expense" else "income"
@@ -84,12 +85,12 @@ class AddBillActivity : AppCompatActivity() {
     }
 
     private fun setupDatePicker() {
-        binding.addbillTietDate.setOnClickListener {
+        binding.editbillTietDate.setOnClickListener {
             val cal = today()
             DatePickerDialog(
                 this,
                 { _, y, m, d ->
-                    binding.addbillTietDate.setText("$y/${m + 1}/$d")
+                    binding.editbillTietDate.setText("$y/${m + 1}/$d")
                 },
                 cal.get(Calendar.YEAR),
                 cal.get(Calendar.MONTH),
@@ -104,7 +105,7 @@ class AddBillActivity : AppCompatActivity() {
         val category = selectedCategory ?: return
 
         // 2. 日期
-        val dateStr = binding.addbillTietDate.text.toString()
+        val dateStr = binding.editbillTietDate.text.toString()
         val parts = dateStr.split("/")
         val year = parts[0].toInt()
         val month = parts[1].toInt()
@@ -113,15 +114,15 @@ class AddBillActivity : AppCompatActivity() {
         val cal = Calendar.getInstance().apply {
             set(year, month - 1, day)
         }
-        val timestamp = com.google.firebase.Timestamp(cal.time)
+        val timestamp = Timestamp(cal.time)
         val weekDay = cal.get(Calendar.DAY_OF_WEEK)
 
         // 3. 類型
-        val type = if (binding.addbillMbExpense.isChecked) "expense" else "income"
+        val type = if (binding.editbillMbExpense.isChecked) "expense" else "income"
 
 
         //  備註
-        val noteShow = binding.addbillTietNote.text.toString()
+        val noteShow = binding.editbillTietNote.text.toString()
         val note = noteShow.ifBlank { category.name }
 
 
@@ -169,7 +170,7 @@ class AddBillActivity : AppCompatActivity() {
         categoryAdapter = CategoryAdapter(categoryList, 0) { item ->
             selectedCategory = item
         }
-        binding.addbillRecyclerView.adapter = categoryAdapter
+        binding.editbillRecyclerView.adapter = categoryAdapter
 
         // 預設顯示選則第一個（未分類）
         selectedCategory = categoryList.first()
@@ -214,7 +215,7 @@ class AddBillActivity : AppCompatActivity() {
     }
 
     private fun renderAmount() {
-        binding.addbillTvAmount.text = "$" + "%,d".format(amount)
+        binding.editbillTvAmount.text = "$" + "%,d".format(amount)
     }
 
 }

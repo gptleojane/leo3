@@ -14,8 +14,11 @@ import java.util.Calendar
 class QuickAddDialog : DialogFragment() {
 
     var onAdded: (() -> Unit)? = null
+
     private var _binding: QuickAddDialogAddBinding? = null
     private val binding get() = _binding!!
+
+    private var amount: Long = 0L
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,10 +41,11 @@ class QuickAddDialog : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
+        renderAmount()
         setupNumberPad()
 
-        binding.npExpense.setOnClickListener { save("expense") }
-        binding.npIncome.setOnClickListener { save("income") }
+        binding.npExpense.setOnClickListener { addBill("expense") }
+        binding.npIncome.setOnClickListener { addBill("income") }
 
     }
 
@@ -52,44 +56,37 @@ class QuickAddDialog : DialogFragment() {
 
     private fun setupNumberPad() {
 
-        fun append(num: String) {
-            val raw = binding.qaddTietAmount.text.toString().replace(",", "")
+        fun append(digit: Int) {
+            val newValue =
+                if (amount == 0L) digit.toLong()
+                else amount * 10 + digit
 
-            // 不允許第一碼就是 0
-            if (raw == "" && num == "0") return
+            if (newValue > 9_999_999_999L) {
+                Toast.makeText(requireContext(), "超過輸入上限", Toast.LENGTH_SHORT).show()
+                return
+            }
 
-            // ⭐ 限制最多  碼
-            if (raw.length >= 12) return
-
-
-            val newValue = raw + num
-            binding.qaddTietAmount.setText("%,d".format(newValue.toLong()))
+            amount = newValue
+            renderAmount()
         }
 
-        binding.np0.setOnClickListener { append("0") }
-        binding.np1.setOnClickListener { append("1") }
-        binding.np2.setOnClickListener { append("2") }
-        binding.np3.setOnClickListener { append("3") }
-        binding.np4.setOnClickListener { append("4") }
-        binding.np5.setOnClickListener { append("5") }
-        binding.np6.setOnClickListener { append("6") }
-        binding.np7.setOnClickListener { append("7") }
-        binding.np8.setOnClickListener { append("8") }
-        binding.np9.setOnClickListener { append("9") }
+        binding.np0.setOnClickListener { append(0) }
+        binding.np1.setOnClickListener { append(1) }
+        binding.np2.setOnClickListener { append(2) }
+        binding.np3.setOnClickListener { append(3) }
+        binding.np4.setOnClickListener { append(4) }
+        binding.np5.setOnClickListener { append(5) }
+        binding.np6.setOnClickListener { append(6) }
+        binding.np7.setOnClickListener { append(7) }
+        binding.np8.setOnClickListener { append(8) }
+        binding.np9.setOnClickListener { append(9) }
     }
 
-    private fun save(type: String) {
-        val amountStr = binding.qaddTietAmount.text.toString().replace(",", "")
-
-        if (amountStr.isEmpty()) {
-            Toast.makeText(requireContext(), "請輸入金額", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val amount = amountStr.toLong()
+    private fun addBill(type: String) {
 
         val cal = Calendar.getInstance()
         val timestamp = com.google.firebase.Timestamp(cal.time)
+
         val year = cal.get(Calendar.YEAR)
         val month = cal.get(Calendar.MONTH) + 1
         val day = cal.get(Calendar.DAY_OF_MONTH)
@@ -97,14 +94,12 @@ class QuickAddDialog : DialogFragment() {
 
         val account = UserManager.getAccount(requireContext()) ?: return
 
-        // ⭐ 第 1 步：取得同類型的所有分類（包含未分類）
+        //  取得「未分類」的autoID
         FirestoreHelper.getCategories(account, type) { list ->
-
-            // 找到「未分類」
             val defaultCategoryId =
-                list.firstOrNull { it.name == "未分類" }?.id ?: ""
+                list.firstOrNull { it.name == "未分類" }?.id ?: return@getCategories
 
-            // ⭐ 第 2 步：決定要新增的資料內容
+            //  第 2 步：決定要新增的資料內容
             val billData = hashMapOf(
                 "type" to type,
                 "amount" to amount,
@@ -121,11 +116,16 @@ class QuickAddDialog : DialogFragment() {
             FirestoreHelper.addBill(account, billData) {
                 Toast.makeText(requireContext(), "新增成功", Toast.LENGTH_SHORT).show()
 
-
                 onAdded?.invoke()
                 dismiss()
             }
         }
+    }
+
+    private fun renderAmount() {
+        binding.qaddTvAmount.setText(
+            "$" + "%,d".format(amount)
+        )
     }
 
 }

@@ -36,10 +36,6 @@ class SettingFragment : Fragment() {
         val account= UserManager.getAccount(requireContext())
         binding.settingFragmentUserInfoEmail.text=account
 
-        // 外觀主題
-        binding.settingFragmentPersonalizeThemeSwitch.setOnClickListener {
-
-        }
 
         binding.settingFragmentPersonalizeChangePassword.setOnClickListener {
             val intent = Intent(requireContext(), ChangePasswordActivity::class.java)
