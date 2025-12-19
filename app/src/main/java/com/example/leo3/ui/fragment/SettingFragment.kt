@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.example.leo3.databinding.FragmentSettingBinding
 import com.example.leo3.ui.activity.ChangePasswordActivity
+import com.example.leo3.ui.activity.EditCategoryActivity
 import com.example.leo3.ui.activity.LoginActivity
 import com.example.leo3.util.UserManager
 
@@ -55,6 +56,11 @@ class SettingFragment : Fragment() {
         // ================= 功能設定 =================
         binding.settingFragmentSetExportData.setOnClickListener {
             // TODO: 匯出資料 (CSV)
+        }
+
+        binding.settingFragmentSetEditCategory.setOnClickListener {
+            val intent = Intent(requireContext(), EditCategoryActivity::class.java)
+            startActivity(intent)
         }
 
 

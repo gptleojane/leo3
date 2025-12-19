@@ -155,7 +155,7 @@
 
     <!-- 新增分類 -->
     <LinearLayout
-        android:id="@+id/setting_fragment_set_addCategories"
+        android:id="@+id/setting_fragment_set_editCategory"
         android:layout_width="match_parent"
         android:layout_height="52dp"
         android:clickable="true"

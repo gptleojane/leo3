@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.leo3.R
 import com.example.leo3.data.firebase.FirestoreHelper
+import com.example.leo3.data.model.Bill
 import com.example.leo3.data.model.CategoryItem
 import com.example.leo3.databinding.ActivityEditBillBinding
 import com.example.leo3.ui.adapter.CategoryAdapter
@@ -24,9 +25,13 @@ class EditBillActivity : AppCompatActivity() {
     // 分類列表
     private val categoryList = mutableListOf<CategoryItem>()
     private lateinit var categoryAdapter: CategoryAdapter
+
+    //利用bill自動產生的autoID來指定該筆資料，進行雲端查詢
+    private var billId: String = ""
+    private var currentBill: Bill? = null
+
     private var selectedCategory: CategoryItem? = null
     private var amount: Long = 0L
-    private fun today(): Calendar = Calendar.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,52 +46,85 @@ class EditBillActivity : AppCompatActivity() {
             insets
         }
 
+        billId = intent.getStringExtra("billId") ?: run {
+            finish()
+            return
+        }
+
         // RecyclerView 設定 3 欄
         binding.editbillRecyclerView.layoutManager = GridLayoutManager(this, 3)
 
-        //預設日期為今天，金額$0，類型為支出
-        setupDefaultState()
-
-        // Toggle 切換收入 / 支出
         setupTypeToggle()
-
         setupDatePicker()
-
         setupNumberPad()
 
 
-        binding.editbillBtEdit.setOnClickListener { addBill() }
+        binding.editbillBtEdit.setOnClickListener { updateBill() }
 
-        binding.editbillBtBack.setOnClickListener { finish() }
+        binding.editbillBtDelete.setOnClickListener { deleteBill() }
+
+        loadBillFromCloud()
+
     }
 
-    private fun setupDefaultState() {
-        // 預設日期
-        val cal = today()
+    private fun loadBillFromCloud() {
+        val account = UserManager.getAccount(this) ?: return
+
+        FirestoreHelper.getBillById(account, billId) { bill ->
+            if (bill == null) {
+                Toast.makeText(this, "資料不存在", Toast.LENGTH_SHORT).show()
+                finish()
+                return@getBillById
+            }
+
+            currentBill = bill
+            amount = bill.amount
+
+            renderBillToUI(bill)
+        }
+    }
+
+
+    private fun renderBillToUI(bill: Bill) {
+        // 類型
+        if (bill.type == "expense") {
+            binding.editbillMbtgType.check(R.id.editbill_mb_expense)
+        } else {
+            binding.editbillMbtgType.check(R.id.editbill_mb_income)
+        }
+
+        // 日期
         binding.editbillTietDate.setText(
-            "${cal.get(Calendar.YEAR)}/${cal.get(Calendar.MONTH) + 1}/${cal.get(Calendar.DAY_OF_MONTH)}"
+            "${bill.year}/${bill.month}/${bill.day}"
         )
 
-        // 預設金額
+        // 金額
         renderAmount()
 
-        // 預設支出
-        binding.editbillMbtgType.check(R.id.addbill_mb_expense)
-        loadCategories("expense")
+        // 備註
+        binding.editbillTietNote.setText(bill.note)
+
+        // 分類
+        loadCategories(bill.type, bill.categoryId)
     }
 
+
+    // 2️⃣ UI 設定
+    // -----------------------------
     private fun setupTypeToggle() {
         binding.editbillMbtgType.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (!isChecked) return@addOnButtonCheckedListener
 
-            val type = if (checkedId == R.id.addbill_mb_expense) "expense" else "income"
-            loadCategories(type)
+            val type =
+                if (checkedId == R.id.editbill_mb_expense) "expense" else "income"
+
+            loadCategories(type, null)
         }
     }
 
     private fun setupDatePicker() {
         binding.editbillTietDate.setOnClickListener {
-            val cal = today()
+            val cal = Calendar.getInstance()
             DatePickerDialog(
                 this,
                 { _, y, m, d ->
@@ -99,81 +137,72 @@ class EditBillActivity : AppCompatActivity() {
         }
     }
 
-    // 新增帳單
-    private fun addBill() {
-
-        val category = selectedCategory ?: return
-
-        // 2. 日期
-        val dateStr = binding.editbillTietDate.text.toString()
-        val parts = dateStr.split("/")
-        val year = parts[0].toInt()
-        val month = parts[1].toInt()
-        val day = parts[2].toInt()
-
-        val cal = Calendar.getInstance().apply {
-            set(year, month - 1, day)
-        }
-        val timestamp = Timestamp(cal.time)
-        val weekDay = cal.get(Calendar.DAY_OF_WEEK)
-
-        // 3. 類型
-        val type = if (binding.editbillMbExpense.isChecked) "expense" else "income"
-
-
-        //  備註
-        val noteShow = binding.editbillTietNote.text.toString()
-        val note = noteShow.ifBlank { category.name }
-
-
-        // 7. 建立資料 Map
-        val billData = hashMapOf(
-            "type" to type,
-            "amount" to amount,
-            "note" to note,
-            "date" to timestamp,
-            "year" to year,
-            "month" to month,
-            "day" to day,
-            "weekDay" to weekDay,
-            "categoryId" to category.id
-        )
-
-
-        val account = UserManager.getAccount(this) ?: return
-        FirestoreHelper.addBill(account, billData) {
-
-            setResult(RESULT_OK)
-
-            finish()
-        }
-    }
-
-
-    // Firestore 載入分類 → 改成呼叫 CategoryRepository
-    private fun loadCategories(type: String) {
+    private fun loadCategories(type: String, preselectId: String?) {
         val account = UserManager.getAccount(this) ?: return
 
         FirestoreHelper.getCategories(account, type) { list ->
             categoryList.clear()
             categoryList.addAll(list)
-            setupCategoryAdapter()
+
+            val defaultIndex = list.indexOfFirst { it.id == preselectId }
+                .takeIf { it >= 0 } ?: 0
+
+            categoryAdapter =
+                CategoryAdapter(categoryList, defaultIndex) { item ->
+                    selectedCategory = item
+                }
+
+            binding.editbillRecyclerView.adapter = categoryAdapter
+            selectedCategory = categoryList[defaultIndex]
         }
     }
 
 
-    private fun setupCategoryAdapter() {
-        // 永遠選擇第一筆（未分類）
-        if (categoryList.isEmpty()) return
+    // 3️⃣ 修改
+    // -----------------------------
+    private fun updateBill() {
+        val category = selectedCategory ?: return
+        val account = UserManager.getAccount(this) ?: return
 
-        //預設已選定第一項分類
-        categoryAdapter = CategoryAdapter(categoryList, 0) { item ->
-            selectedCategory = item
+        val dateParts = binding.editbillTietDate.text.toString().split("/")
+        val year = dateParts[0].toInt()
+        val month = dateParts[1].toInt()
+        val day = dateParts[2].toInt()
+
+        val cal = Calendar.getInstance().apply {
+            set(year, month - 1, day)
         }
-        binding.editbillRecyclerView.adapter = categoryAdapter
 
-        // 預設顯示選則第一個（未分類）
-        selectedCategory = categoryList.first()
+        val noteInput = binding.editbillTietNote.text.toString()
+        val note = noteInput.ifBlank { category.name }
+
+        val data = mapOf(
+            "type" to (if (binding.editbillMbExpense.isChecked) "expense" else "income"),
+            "amount" to amount,
+            "note" to note,
+            "date" to Timestamp(cal.time),
+            "year" to year,
+            "month" to month,
+            "day" to day,
+            "weekDay" to cal.get(Calendar.DAY_OF_WEEK),
+            "categoryId" to category.id
+        )
+
+        FirestoreHelper.updateBill(account, billId, data) {
+            setResult(RESULT_OK)
+            finish()
+        }
+    }
+
+    // 4️⃣ 刪除
+    // -----------------------------
+    private fun deleteBill() {
+        val account = UserManager.getAccount(this) ?: return
+
+        FirestoreHelper.deleteBill(account, billId) {
+            setResult(RESULT_OK)
+            finish()
+        }
     }
 
     // ----------------- 數字鍵盤 -----------------
@@ -186,7 +215,7 @@ class EditBillActivity : AppCompatActivity() {
                 return
 
             }
-            amount=next
+            amount = next
             renderAmount()
         }
 

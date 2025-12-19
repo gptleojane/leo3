@@ -3,6 +3,7 @@ package com.example.leo3.data.model
 import com.google.firebase.Timestamp
 
 data class Bill(
+    var id: String = "", // 存 Firestore 的文件 ID
     val type: String = "",
     val amount: Long = 0,
     val note: String = "",
@@ -14,6 +15,4 @@ data class Bill(
     val categoryId: String = "",
     var categoryName: String = ""
 )
-
-
 

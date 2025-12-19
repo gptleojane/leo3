@@ -65,7 +65,8 @@ class RecordFragment : Fragment() {
             reload()
         }
     }
-    private fun loadRecordData(){
+
+    private fun loadRecordData() {
         val account = UserManager.getAccount(requireContext()) ?: return
         val (year, month) = getTodayYearMonth()
 
@@ -124,12 +125,11 @@ class RecordFragment : Fragment() {
         binding.recordRecyclerView.adapter =
             RecordAdapter(uiList) { bill ->
 
-                val intent =
-                    Intent(requireContext(), EditBillActivity::class.java)
+                val intent = Intent(requireContext(), EditBillActivity::class.java)
                 intent.putExtra("billId", bill.id)
 
-                // ⭐ 重點：用 forResult
                 startActivityForResult(intent, REQ_EDIT)
+
             }
     }
 

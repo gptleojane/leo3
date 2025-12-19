@@ -38,6 +38,10 @@ class StatFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
         reload()
+
+        binding.statIv.setOnClickListener {
+            reload()
+        }
     }
 
     override fun onDestroyView() {

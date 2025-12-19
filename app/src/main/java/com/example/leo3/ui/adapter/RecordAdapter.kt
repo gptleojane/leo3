@@ -86,11 +86,9 @@ class RecordAdapter(
             }
 
             // ★ 1. 左邊分類文字
-            binding.homeBillCategory.text = bill.categoryName.ifBlank { "?" }
+            binding.homeBillCategory.text = bill.categoryName
 
-            // ★ 2. note 空白 → 顯示空白（不顯示 categoryId）
-            binding.homeBillName.text = bill.note.ifBlank { "" }
-
+            binding.homeBillName.text = bill.note
             // ★ 3. 金額
             binding.homeBillAmount.text = "$${bill.amount}"
 

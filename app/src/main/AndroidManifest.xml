@@ -17,6 +17,14 @@
         <activity
             android:name=".ui.activity.MainActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".ui.activity.EditBillActivity"
+            android:exported="false" />
+
+        <activity android:name=".ui.activity.EditCategoryActivity"
+            android:exported="false" />
+
         <activity
             android:name=".ui.activity.LoginActivity"
             android:exported="true">

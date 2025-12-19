@@ -72,7 +72,10 @@ object FirestoreHelper {
             .orderBy("day", Query.Direction.ASCENDING)
             .get()
             .addOnSuccessListener { qs ->
-                onResult(qs.toObjects(Bill::class.java))
+                val list = qs.documents.mapNotNull { doc ->
+                    doc.toObject(Bill::class.java)?.apply { id = doc.id }
+                }
+                onResult(list)
             }
     }
 
@@ -94,7 +97,10 @@ object FirestoreHelper {
             .limit(3)
             .get()
             .addOnSuccessListener { qs ->
-                onResult(qs.toObjects(Bill::class.java))
+                val list = qs.documents.mapNotNull { doc ->
+                    doc.toObject(Bill::class.java)?.apply { id = doc.id }
+                }
+                onResult(list)
             }
     }
 
@@ -116,7 +122,12 @@ object FirestoreHelper {
     // -----------------------------
 // 更新使用者密碼
 // -----------------------------
-    fun updatePassword(account: String, newPassword: String, onSuccess: () -> Unit, onFail: (Exception) -> Unit) {
+    fun updatePassword(
+        account: String,
+        newPassword: String,
+        onSuccess: () -> Unit,
+        onFail: (Exception) -> Unit
+    ) {
         db.collection("users")
             .document(account)
             .update("password", newPassword)
@@ -124,7 +135,12 @@ object FirestoreHelper {
             .addOnFailureListener { e -> onFail(e) }
     }
 
-    fun createUser(account: String, password: String, onSuccess: () -> Unit, onFail: (Exception) -> Unit) {
+    fun createUser(
+        account: String,
+        password: String,
+        onSuccess: () -> Unit,
+        onFail: (Exception) -> Unit
+    ) {
         val data = mapOf(
             "account" to account,
             "password" to password
@@ -183,7 +199,57 @@ object FirestoreHelper {
             }
     }
 
+    // ------------------------
+// EditBill 專用
+// ------------------------
 
+    fun getBillById(account: String, billId: String, onResult: (Bill?) -> Unit) {
+        db.collection("users")
+            .document(account)
+            .collection("bills")
+            .document(billId)
+            .get()
+            .addOnSuccessListener { doc ->
+                if (!doc.exists()) {
+                    onResult(null)
+                    return@addOnSuccessListener
+                }
+                val bill = doc.toObject(Bill::class.java)
+                bill?.id = doc.id
+                onResult(bill)
+            }
+            .addOnFailureListener {
+                onResult(null)
+            }
+    }
+
+
+    fun updateBill(
+        account: String,
+        billId: String,
+        data: Map<String, Any>,
+        onSuccess: () -> Unit
+    ) {
+        db.collection("users")
+            .document(account)
+            .collection("bills")
+            .document(billId)
+            .update(data)
+            .addOnSuccessListener { onSuccess() }
+    }
+
+    fun deleteBill(
+        account: String,
+        billId: String,
+        onSuccess: () -> Unit
+    ) {
+        db.collection("users")
+            .document(account)
+            .collection("bills")
+            .document(billId)
+            .delete()
+            .addOnSuccessListener { onSuccess() }
+    }
 
 
 }
