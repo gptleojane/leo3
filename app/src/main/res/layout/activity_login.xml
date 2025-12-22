@@ -50,16 +50,6 @@
             android:textColorHint="@color/text_hint"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <CheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="4dp"
-        android:text="@string/login_save_account"
-        android:textColor="@color/text_secondary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/login_til_account" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/login_til_password"

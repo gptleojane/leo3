@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import android.widget.Toast.LENGTH_LONG
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.leo3.data.firebase.FirestoreHelper
@@ -13,6 +15,7 @@ import com.example.leo3.data.model.CategoryStatItem
 import com.example.leo3.databinding.FragmentStatBinding
 import com.example.leo3.ui.adapter.StatCategoryAdapter
 import com.example.leo3.util.UserManager
+import com.google.android.material.snackbar.Snackbar
 import java.util.Calendar
 
 class StatFragment : Fragment() {
@@ -21,7 +24,7 @@ class StatFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var currentYear = 0
-    private var currentMonth : Int? = null
+    private var currentMonth: Int? = null
     private var categoryMap: Map<String, String> = emptyMap()
 
 
@@ -75,11 +78,18 @@ class StatFragment : Fragment() {
             showMonthPopupMenu()
         }
 
+        binding.statTvHint.setOnClickListener {
+            Snackbar.make(
+                binding.root,
+                "📅 點左上角可回到今天\n➕ 下方中央長按「＋」可進入完整記帳",
+                Snackbar.LENGTH_LONG
+            ).show()
+        }
         showStatResult(emptyList(), emptyList(), 0, 0)
     }
 
 
-    private fun loadStatData(){
+    private fun loadStatData() {
         val account = UserManager.getAccount(requireContext()) ?: return
 
         FirestoreHelper.getAllCategories(account) { categories ->
@@ -108,6 +118,7 @@ class StatFragment : Fragment() {
         }
 
     }
+
     private fun loadYearBills(
         account: String,
         year: Int
@@ -117,6 +128,7 @@ class StatFragment : Fragment() {
             calculateAndShowStat(bills)
         }
     }
+
     private fun calculateAndShowStat(bills: List<Bill>) {
 
         val expenseBills = bills.filter { it.type == "expense" }
@@ -175,6 +187,7 @@ class StatFragment : Fragment() {
         binding.statTotalIncome.text = "$$totalIncome"
         binding.statTotalBalance.text = "$${totalIncome - totalExpense}"
     }
+
     private fun showYearPopupMenu() {
         val popup = PopupMenu(requireContext(), binding.statYearSelector)
 

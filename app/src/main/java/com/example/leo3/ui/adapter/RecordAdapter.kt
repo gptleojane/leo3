@@ -94,12 +94,12 @@ class RecordAdapter(
 
             // ★ 4. 根據支出 / 收入 套不同背景顏色
             val bgRes = if (bill.type == "expense") {
-                R.drawable.bg_expense_circle   // 你 XML 做的那兩個
+                R.drawable.bg_expense_circle
             } else {
                 R.drawable.bg_income_circle
             }
+            binding.homeBillCategory.setBackgroundResource(bgRes)
 
-            binding.homeBillIcon.setBackgroundResource(bgRes)
         }
     }
 

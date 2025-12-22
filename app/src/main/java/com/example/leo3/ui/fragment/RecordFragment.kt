@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +17,7 @@ import com.example.leo3.databinding.FragmentRecordBinding
 import com.example.leo3.ui.activity.EditBillActivity
 import com.example.leo3.ui.adapter.RecordAdapter
 import com.example.leo3.util.UserManager
+import com.google.android.material.snackbar.Snackbar
 import java.util.Calendar
 import kotlin.collections.filter
 
@@ -63,6 +65,14 @@ class RecordFragment : Fragment() {
 
         binding.recordIv.setOnClickListener {
             reload()
+        }
+
+        binding.recordTvHint.setOnClickListener {
+            Snackbar.make(
+                binding.root,
+                "📅 點左上角可回到今天\n➕ 下方中央長按「＋」可進入完整記帳",
+                Snackbar.LENGTH_LONG
+            ).show()
         }
     }
 

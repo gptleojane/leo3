@@ -9,10 +9,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
+import com.example.leo3.data.firebase.FirestoreHelper
 import com.example.leo3.databinding.FragmentSettingBinding
 import com.example.leo3.ui.activity.ChangePasswordActivity
 import com.example.leo3.ui.activity.EditCategoryActivity
 import com.example.leo3.ui.activity.LoginActivity
+import com.example.leo3.util.AppFlags
 import com.example.leo3.util.UserManager
 
 class SettingFragment : Fragment() {
@@ -33,9 +35,8 @@ class SettingFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-
-        val account= UserManager.getAccount(requireContext())
-        binding.settingFragmentUserInfoEmail.text=account
+        val account = UserManager.getAccount(requireContext())
+        binding.settingFragmentUserInfoEmail.text = account
 
 
         binding.settingFragmentPersonalizeChangePassword.setOnClickListener {
@@ -53,6 +54,32 @@ class SettingFragment : Fragment() {
             startActivity(intent)
         }
 
+        binding.settingFragmentPersonalizeCleanAllData.setOnClickListener {
+            val account = UserManager.getAccount(requireContext()) ?: return@setOnClickListener
+            AlertDialog.Builder(requireContext())
+                .setTitle("確認清除資料")
+                .setMessage("這個動作會刪除所有帳單，且無法復原，確定要繼續嗎？")
+                .setPositiveButton("確認") { _, _ ->
+                    FirestoreHelper.clearAllBills(
+                        account,
+                        onSuccess = {
+                            Toast.makeText(context, "清除成功", Toast.LENGTH_SHORT).show()
+
+                            AppFlags.reloadData = true
+
+                        },
+                        onFail = {
+                            Toast.makeText(context, "清除失敗", Toast.LENGTH_SHORT).show()
+                        }
+
+                    )
+
+                }
+                .setNegativeButton("取消", null)
+                .show()
+        }
+
+
         // ================= 功能設定 =================
         binding.settingFragmentSetExportData.setOnClickListener {
             // TODO: 匯出資料 (CSV)
@@ -66,9 +93,12 @@ class SettingFragment : Fragment() {
 
 
 
-        // 關於2
+
         binding.settingFragmentOtherAbout.setOnClickListener {
-            showAboutDialog()
+            AlertDialog.Builder(requireContext())
+                .setTitle("記帳APP")
+                .setMessage("版本：1.0.0")
+                .show()
         }
     }
 
@@ -76,20 +106,6 @@ class SettingFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
-
-
-
-
-    private fun showAboutDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle("APP名稱(考慮刪除)")
-            .setMessage("版本：1.0.0")
-            .setPositiveButton("確定", null)
-            .show()
-    }
-
-
 
 
 }

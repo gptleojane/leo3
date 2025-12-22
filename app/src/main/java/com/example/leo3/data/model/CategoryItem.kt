@@ -1,8 +1,10 @@
 package com.example.leo3.data.model
 
 data class CategoryItem(
-    val id: String,
-    val name: String,
-    val type: String,
-    val sortOrder: Int
+    var id: String = "",
+    val name: String = "",
+    val type: String = "",
+    val sortOrder: Int = 0,
+    val fixed: Boolean = false
 )
+

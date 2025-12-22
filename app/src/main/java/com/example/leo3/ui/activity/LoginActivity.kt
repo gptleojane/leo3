@@ -3,9 +3,13 @@ package com.example.leo3.ui.activity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.example.leo3.data.firebase.FirestoreHelper
+import com.example.leo3.databinding.ActivityAddBillBinding
 import com.example.leo3.databinding.ActivityLoginBinding
 import com.example.leo3.util.UserManager
 
@@ -14,15 +18,17 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-        // 套用主題設定
-        val theme = UserManager.getTheme(this)
-        when (theme) {
-            "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        }
-
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
 
         // 若已登入 → 直接跳 MainActivity
         val currentAccount = UserManager.getAccount(this)
@@ -32,8 +38,7 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        binding = ActivityLoginBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+
 
         // 登入按鈕
         binding.loginBtLogin.setOnClickListener {

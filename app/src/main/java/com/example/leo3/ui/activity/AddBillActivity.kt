@@ -1,6 +1,7 @@
 package com.example.leo3.ui.activity
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -13,6 +14,7 @@ import com.example.leo3.data.firebase.FirestoreHelper
 import com.example.leo3.data.model.CategoryItem
 import com.example.leo3.databinding.ActivityAddBillBinding
 import com.example.leo3.ui.adapter.CategoryAdapter
+import com.example.leo3.util.AppFlags
 import com.example.leo3.util.UserManager
 import java.util.Calendar
 
@@ -53,6 +55,10 @@ class AddBillActivity : AppCompatActivity() {
 
         setupNumberPad()
 
+        binding.addbillBtAddCategory.setOnClickListener {
+            val intent = Intent(this, EditCategoryActivity::class.java)
+            startActivity(intent)
+        }
 
         binding.addbillBtAdd.setOnClickListener { addBill() }
 
@@ -142,7 +148,7 @@ class AddBillActivity : AppCompatActivity() {
         val account = UserManager.getAccount(this) ?: return
         FirestoreHelper.addBill(account, billData) {
 
-            setResult(RESULT_OK)
+            AppFlags.reloadData = true
 
             finish()
         }

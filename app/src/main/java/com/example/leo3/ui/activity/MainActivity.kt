@@ -16,6 +16,7 @@ import com.example.leo3.ui.fragment.HomeFragment
 import com.example.leo3.ui.fragment.RecordFragment
 import com.example.leo3.ui.fragment.SettingFragment
 import com.example.leo3.ui.fragment.StatFragment
+import com.example.leo3.util.AppFlags
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -27,21 +28,6 @@ class MainActivity : AppCompatActivity() {
 
     //預設首頁
     private var currentFragment: Fragment? = null
-
-//    建立一個Activity Result 接收器，讓跳轉頁面新增帳成功時，回傳RESULT_OK，才會reload該fragment
-    private val addBillLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result ->
-
-            // 這裡就是「接收 AddBillActivity 回傳狀態」的地方
-            if (result.resultCode == RESULT_OK) {
-                homeFragment.reload()
-                recordFragment.reload()
-                statFragment.reload()
-            }
-        }
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,6 +60,12 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        reloadAllIfNeeded()
+    }
+
     private fun setupBottomNavUI(){
         // Bottom Nav 切換 Fragment
         binding.mainBottomNav.setOnItemSelectedListener { item ->
@@ -95,17 +87,18 @@ class MainActivity : AppCompatActivity() {
             val dialog = QuickAddDialog()
             dialog.onAdded = {
 
-                homeFragment.reload()
-                recordFragment.reload()
-                statFragment.reload()
+                AppFlags.reloadData=true
+                reloadAllIfNeeded()
+
             }
             dialog.show(supportFragmentManager, "quick_add_dialog")
         }
 
         // FAB 長按：完整記帳
         binding.mainFabAdd.setOnLongClickListener {
+            AppFlags.reloadData = true
             val intent = Intent(this, AddBillActivity::class.java)
-            addBillLauncher.launch(intent)
+            startActivity(intent)
             true
         }
     }
@@ -119,7 +112,20 @@ class MainActivity : AppCompatActivity() {
         }.commit()
 
         currentFragment = target
+
+        reloadAllIfNeeded()
     }
+
+    private fun reloadAllIfNeeded() {
+        if (AppFlags.reloadData) {
+            AppFlags.reloadData = false
+            homeFragment.reload()
+            recordFragment.reload()
+            statFragment.reload()
+        }
+    }
+
+
 
 
 }

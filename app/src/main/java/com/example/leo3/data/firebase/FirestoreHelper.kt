@@ -25,7 +25,8 @@ object FirestoreHelper {
                         id = doc.id,
                         name = doc.getString("name") ?: "",
                         type = type,
-                        sortOrder = (doc.getLong("sortOrder") ?: 0).toInt()
+                        sortOrder = (doc.getLong("sortOrder") ?: 0).toInt(),
+                        fixed = doc.getBoolean("fixed") ?: false
                     )
                 }
                 onResult(list)
@@ -250,6 +251,99 @@ object FirestoreHelper {
             .delete()
             .addOnSuccessListener { onSuccess() }
     }
+
+    fun addCategory(
+        account: String,
+        type: String,
+        name: String,
+        onSuccess: () -> Unit
+    ) {
+        val categoriesRef = db.collection("users")
+            .document(account)
+            .collection("categories")
+
+        // 先找該 type 的最大 sortOrder
+        categoriesRef
+            .whereEqualTo("type", type)
+            .orderBy("sortOrder", Query.Direction.DESCENDING)
+            .limit(1)
+            .get()
+            .addOnSuccessListener { qs ->
+                val maxSortOrder =
+                    qs.documents.firstOrNull()?.getLong("sortOrder")?.toInt() ?: 0
+
+                val data = mapOf(
+                    "name" to name,
+                    "type" to type,
+                    "sortOrder" to (maxSortOrder + 1),
+                    "fixed" to false
+                )
+
+                categoriesRef
+                    .add(data)
+                    .addOnSuccessListener { onSuccess() }
+            }
+    }
+
+    fun updateCategory(
+        account: String,
+        categoryId: String,
+        newName: String,
+        onSuccess: () -> Unit
+    ) {
+        db.collection("users")
+            .document(account)
+            .collection("categories")
+            .document(categoryId)
+            .update("name", newName)
+            .addOnSuccessListener { onSuccess() }
+    }
+
+    fun deleteCategory(
+        account: String,
+        categoryId: String,
+        onSuccess: () -> Unit
+    ) {
+        db.collection("users")
+            .document(account)
+            .collection("categories")
+            .document(categoryId)
+            .delete()
+            .addOnSuccessListener { onSuccess() }
+    }
+
+    fun clearAllBills(
+        account: String,
+        onSuccess: () -> Unit,
+        onFail: (Exception) -> Unit
+    ) {
+        val billsRef = db.collection("users")
+            .document(account)
+            .collection("bills")
+
+        billsRef.get()
+            .addOnSuccessListener { qs ->
+                if (qs.isEmpty) {
+                    onSuccess()
+                    return@addOnSuccessListener
+                }
+
+                val batch = db.batch()
+                qs.documents.forEach { doc ->
+                    batch.delete(doc.reference)
+                }
+
+                batch.commit()
+                    .addOnSuccessListener { onSuccess() }
+                    .addOnFailureListener { e -> onFail(e) }
+            }
+            .addOnFailureListener { e ->
+                onFail(e)
+            }
+    }
+
+
+
 
 
 }
