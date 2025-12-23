@@ -13,7 +13,7 @@
     <LinearLayout
         android:id="@+id/setting_fragment_userInfo"
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="80dp"
         android:background="@color/bg_main"
         android:gravity="center_vertical"
         android:paddingStart="16dp"
@@ -34,10 +34,10 @@
             android:id="@+id/setting_fragment_userInfo_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="12dp"
+            android:paddingStart="24dp"
             android:text="user@example.com"
             android:textColor="@color/text_primary"
-            android:textSize="18sp" />
+            android:textSize="26sp" />
 
     </LinearLayout>
 
@@ -58,7 +58,7 @@
         android:paddingBottom="8dp"
         android:text="@string/personalize"
         android:textColor="@color/text_hint"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
 
 
@@ -66,74 +66,77 @@
     <LinearLayout
         android:id="@+id/setting_fragment_personalize_changePassword"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="60dp"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
             android:contentDescription="@null"
             android:src="@drawable/app_icon" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="12dp"
+            android:layout_marginStart="12dp"
             android:text="@string/personalize_changePassword"
             android:textColor="@color/text_primary"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
     </LinearLayout>
 
     <!-- 登出帳號 -->
     <LinearLayout
         android:id="@+id/setting_fragment_personalize_signOut"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="60dp"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
             android:contentDescription="@null"
             android:src="@drawable/app_icon" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="12dp"
+            android:layout_marginStart="12dp"
             android:text="@string/personalize_signOut"
             android:textColor="@color/text_primary"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/setting_fragment_personalize_cleanAllData"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="60dp"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
             android:contentDescription="@null"
             android:src="@drawable/app_icon" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="12dp"
+            android:layout_marginStart="12dp"
             android:text="清除資料"
             android:textColor="@color/text_primary"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
     </LinearLayout>
 
     <!-- 分隔線 -->
@@ -152,58 +155,60 @@
         android:paddingBottom="8dp"
         android:text="@string/set"
         android:textColor="@color/text_hint"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
     <!-- 新增分類 -->
     <LinearLayout
         android:id="@+id/setting_fragment_set_editCategory"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="60dp"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
             android:contentDescription="@null"
             android:src="@drawable/app_icon" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="12dp"
+            android:layout_marginStart="12dp"
             android:text="新增與管理分類"
             android:textColor="@color/text_primary"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
     </LinearLayout>
 
 
 
     <!-- 匯出資料 -->
     <LinearLayout
-        android:id="@+id/setting_fragment_set_exportData"
+        android:id="@+id/setting_fragment_set_exchangeRate"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="60dp"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
             android:contentDescription="@null"
             android:src="@drawable/app_icon" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="12dp"
-            android:text="@string/set_exportData"
+            android:layout_marginStart="12dp"
+            android:text="匯率換算"
             android:textColor="@color/text_primary"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
     </LinearLayout>
 
 
@@ -222,28 +227,29 @@
         android:paddingBottom="8dp"
         android:text="@string/other"
         android:textColor="@color/text_hint"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
     <!-- 關於 -->
     <LinearLayout
         android:id="@+id/setting_fragment_other_about"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="60dp"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
             android:contentDescription="@null"
             android:src="@drawable/app_icon" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="12dp"
+            android:layout_marginStart="12dp"
             android:text="@string/other_about"
             android:textColor="@color/text_primary"
             android:textSize="18sp" />

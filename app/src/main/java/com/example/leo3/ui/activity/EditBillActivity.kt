@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -35,6 +36,21 @@ class EditBillActivity : AppCompatActivity() {
     private var selectedCategory: CategoryItem? = null
     private var amount: Long = 0L
 
+    private val editCategoryLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+
+                val type =
+                    if (binding.editbillMbExpense.isChecked) "expense" else "income"
+
+                // 👉 重新載入分類，並嘗試維持原本選到的分類
+                loadCategories(type, selectedCategory?.id)
+            }
+        }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -62,7 +78,7 @@ class EditBillActivity : AppCompatActivity() {
 
         binding.editbillBtAddCategory.setOnClickListener {
             val intent = Intent(this, EditCategoryActivity::class.java)
-            startActivity(intent)
+            editCategoryLauncher.launch(intent)
         }
 
         binding.editbillBtEdit.setOnClickListener { updateBill() }

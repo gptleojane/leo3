@@ -1,6 +1,5 @@
 package com.example.leo3.ui.activity
 
-import android.app.DatePickerDialog
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -11,15 +10,11 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.leo3.R
 import com.example.leo3.data.firebase.FirestoreHelper
-import com.example.leo3.data.model.Bill
 import com.example.leo3.data.model.CategoryItem
-import com.example.leo3.databinding.ActivityEditBillBinding
 import com.example.leo3.databinding.ActivityEditCategoryBinding
 import com.example.leo3.ui.adapter.CategoryAdapter
-import com.example.leo3.util.AppFlags
 import com.example.leo3.util.UserManager
-import com.google.firebase.Timestamp
-import java.util.Calendar
+
 
 class EditCategoryActivity : AppCompatActivity() {
 
@@ -70,9 +65,6 @@ class EditCategoryActivity : AppCompatActivity() {
 
 
         binding.editcateBtnBack.setOnClickListener {
-            if (callReload) {
-                AppFlags.reloadData = true
-            }
             finish()
         }
 
@@ -161,7 +153,11 @@ class EditCategoryActivity : AppCompatActivity() {
     }
 
     private fun addCategory() {
-        val type = selectedType
+        val type = when (binding.editcateMbtgType.checkedButtonId) {
+            R.id.editcate_mb_expense -> "expense"
+            R.id.editcate_mb_income -> "income"
+            else -> null
+        }
         val name = binding.editcateTietAddname.text.toString().trim()
 
         if (type == null) {
@@ -212,6 +208,14 @@ class EditCategoryActivity : AppCompatActivity() {
             .setNegativeButton("取消", null)
             .show()
     }
+
+    override fun finish() {
+        if (callReload) {
+            setResult(RESULT_OK)
+        }
+        super.finish()
+    }
+
 }
 
 

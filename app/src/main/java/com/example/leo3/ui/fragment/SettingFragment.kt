@@ -6,13 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.leo3.data.firebase.FirestoreHelper
 import com.example.leo3.databinding.FragmentSettingBinding
 import com.example.leo3.ui.activity.ChangePasswordActivity
 import com.example.leo3.ui.activity.EditCategoryActivity
+import com.example.leo3.ui.activity.ExchangeRate
 import com.example.leo3.ui.activity.LoginActivity
 import com.example.leo3.util.AppFlags
 import com.example.leo3.util.UserManager
@@ -20,6 +22,17 @@ import com.example.leo3.util.UserManager
 class SettingFragment : Fragment() {
     private var _binding: FragmentSettingBinding? = null
     private val binding get() = _binding!!
+
+    private val editCategoryLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == AppCompatActivity.RESULT_OK) {
+                // 👉 分類有變，全域 reload
+                AppFlags.reloadData = true
+            }
+        }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -81,13 +94,15 @@ class SettingFragment : Fragment() {
 
 
         // ================= 功能設定 =================
-        binding.settingFragmentSetExportData.setOnClickListener {
-            // TODO: 匯出資料 (CSV)
+        binding.settingFragmentSetExchangeRate.setOnClickListener {
+            val intent = Intent(requireContext(), ExchangeRate::class.java)
+            startActivity(intent)
+
         }
 
         binding.settingFragmentSetEditCategory.setOnClickListener {
             val intent = Intent(requireContext(), EditCategoryActivity::class.java)
-            startActivity(intent)
+            editCategoryLauncher.launch(intent)
         }
 
 

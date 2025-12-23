@@ -27,11 +27,19 @@ class ChangePasswordActivity : AppCompatActivity() {
             insets
         }
 
+        loadOldPassword()
+
+        binding.cpTietOldpassword.apply {
+            isEnabled = false
+            isFocusable = false
+        }
+
         binding.cpBtBack.setOnClickListener { finish() }
 
         binding.cpBtConfirm.setOnClickListener {
             changePassword()
         }
+
     }
 
     private fun changePassword() {
@@ -39,56 +47,47 @@ class ChangePasswordActivity : AppCompatActivity() {
         val newPwd = binding.cpTietNewpassword.text.toString()
         val confirmPwd = binding.cpTietConfirmnewpassword.text.toString()
 
-        // 基本驗證
-        if (oldPwd.isBlank() || newPwd.isBlank() || confirmPwd.isBlank()) {
-            toast("不能為空白")
+
+        if (newPwd.isBlank() || confirmPwd.isBlank()) {
+            Toast.makeText(this, "不能為空白", Toast.LENGTH_SHORT).show()
             return
         }
         if (newPwd.length < 3) {
-            toast("密碼至少 3 字")
+            Toast.makeText(this, "密碼至少 3 字", Toast.LENGTH_SHORT).show()
             return
         }
         if (newPwd != confirmPwd) {
-            toast("兩次新密碼不同")
+            Toast.makeText(this, "兩次新密碼不同", Toast.LENGTH_SHORT).show()
             return
         }
         if (newPwd == oldPwd) {
-            toast("新舊密碼不能相同")
+            Toast.makeText(this, "新舊密碼不能相同", Toast.LENGTH_SHORT).show()
             return
         }
 
         val account = UserManager.getAccount(this) ?: return
 
-        // ⭐ 第一步：從 Firestore 取得使用者資料
+        FirestoreHelper.updatePassword(
+            account = account,
+            newPassword = newPwd,
+            onSuccess = {
+                Toast.makeText(this, "修改成功", Toast.LENGTH_SHORT).show()
+                finish()
+            },
+            onFail = { e ->
+                Toast.makeText(this, "修改失敗", Toast.LENGTH_SHORT).show()
+            }
+        )
+    }
+
+    private fun loadOldPassword() {
+        val account = UserManager.getAccount(this) ?: return
+
         FirestoreHelper.getUser(account) { data ->
-            if (data == null) {
-                toast("無法取得使用者資料")
-                return@getUser
-            }
-
-            val currentPwd = data["password"]?.toString() ?: ""
-
-            if (currentPwd != oldPwd) {
-                toast("舊密碼錯誤")
-                return@getUser
-            }
-
-            // ⭐ 第二步：更新新密碼
-            FirestoreHelper.updatePassword(
-                account = account,
-                newPassword = newPwd,
-                onSuccess = {
-                    toast("修改成功")
-                    finish()
-                },
-                onFail = { e ->
-                    toast("修改失敗：${e.message}")
-                }
-            )
+            val oldPwd = data?.get("password")?.toString() ?: return@getUser
+            binding.cpTietOldpassword.setText(oldPwd)
         }
     }
 
-    private fun toast(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-    }
 }
+

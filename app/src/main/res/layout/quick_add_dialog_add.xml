@@ -4,15 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="12dp"
+    android:paddingRight="12dp"
+    android:paddingLeft="12dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="4dp"
     android:background="@color/bg_card">
+
 
     <!-- 金額 -->
     <TextView
         android:id="@+id/qadd_tv_amount"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="1"
         android:text="$0"
         android:textSize="30sp"
         android:textStyle="bold"
@@ -46,7 +49,6 @@
             android:textSize="12sp"
             android:gravity="end"
             android:textColor="@color/text_hint"/>
-
 
     </LinearLayout>
 
@@ -232,5 +234,17 @@
 
         </GridLayout>
 
+
     </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/qadd_tv_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="👇長按下方「＋」可進入完整記帳👇"
+        android:textSize="10sp"
+        android:textColor="@color/text_hint"
+        android:layout_gravity="center"
+        android:paddingTop="3dp"/>
+
 </LinearLayout>

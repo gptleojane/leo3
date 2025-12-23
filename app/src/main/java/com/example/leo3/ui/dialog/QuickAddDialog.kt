@@ -103,7 +103,7 @@ class QuickAddDialog : DialogFragment() {
             val billData = hashMapOf(
                 "type" to type,
                 "amount" to amount,
-                "note" to "",
+                "note" to "未分類",
                 "date" to timestamp,
                 "year" to year,
                 "month" to month,

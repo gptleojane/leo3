@@ -81,7 +81,7 @@ class StatFragment : Fragment() {
         binding.statTvHint.setOnClickListener {
             Snackbar.make(
                 binding.root,
-                "📅 點左上角可回到今天\n➕ 下方中央長按「＋」可進入完整記帳",
+                "\uD83D\uDCC5 點左上角可回到今天\n" + "✏\uFE0F 點選項目可編輯或刪除\n",
                 Snackbar.LENGTH_LONG
             ).show()
         }

@@ -25,6 +25,10 @@
         <activity android:name=".ui.activity.EditCategoryActivity"
             android:exported="false" />
 
+        <activity android:name=".ui.activity.ExchangeRate"
+            android:exported="false" />
+
+
         <activity
             android:name=".ui.activity.LoginActivity"
             android:exported="true">

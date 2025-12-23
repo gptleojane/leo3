@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -28,6 +29,19 @@ class AddBillActivity : AppCompatActivity() {
     private var selectedCategory: CategoryItem? = null
     private var amount: Long = 0L
     private fun today(): Calendar = Calendar.getInstance()
+
+    private val editCategoryLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                // 👉 分類有變，重新載入分類
+                val type =
+                    if (binding.addbillMbExpense.isChecked) "expense" else "income"
+                loadCategories(type)
+            }
+        }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +71,7 @@ class AddBillActivity : AppCompatActivity() {
 
         binding.addbillBtAddCategory.setOnClickListener {
             val intent = Intent(this, EditCategoryActivity::class.java)
-            startActivity(intent)
+            editCategoryLauncher.launch(intent)
         }
 
         binding.addbillBtAdd.setOnClickListener { addBill() }

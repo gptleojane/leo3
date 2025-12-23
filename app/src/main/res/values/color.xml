@@ -2,6 +2,7 @@
 
 <resources>
 
+
     <!-- ===== 背景 ===== -->
     <!-- App 主背景（白中帶微灰，柔和） -->
     <color name="bg_main">#FAFAFA</color>
@@ -48,11 +49,6 @@
     <!-- 收入（藍） -->
     <color name="income_blue_light">#64A7F6</color>
     <color name="income_blue_stroke_light">#4F8EDB</color>
-
-
-
-
-
 
 </resources>
 
