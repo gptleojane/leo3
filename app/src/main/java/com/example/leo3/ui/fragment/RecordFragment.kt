@@ -16,6 +16,7 @@ import com.example.leo3.data.model.RecordUiModel
 import com.example.leo3.databinding.FragmentRecordBinding
 import com.example.leo3.ui.activity.EditBillActivity
 import com.example.leo3.ui.adapter.RecordAdapter
+import com.example.leo3.util.RecordUiBuilder
 import com.example.leo3.util.UserManager
 import com.google.android.material.snackbar.Snackbar
 import java.util.Calendar
@@ -58,7 +59,7 @@ class RecordFragment : Fragment() {
     }
 
     private fun setupUI() {
-        binding.recordRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.billRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         binding.recordYearSelector.setOnClickListener { showYearPopupMenu() }
         binding.recordMonthSelector.setOnClickListener { showMonthPopupMenu() }
@@ -130,9 +131,9 @@ class RecordFragment : Fragment() {
         binding.recordSummaryBalanceAmount.text =
             "$${totalIncome - totalExpense}"
 
-        val uiList = buildUiList(bills)
+        val uiList = RecordUiBuilder.build(bills)
 
-        binding.recordRecyclerView.adapter =
+        binding.billRecyclerView.adapter =
             RecordAdapter(uiList) { bill ->
 
                 val intent = Intent(requireContext(), EditBillActivity::class.java)
@@ -143,33 +144,6 @@ class RecordFragment : Fragment() {
             }
     }
 
-    private fun buildUiList(bills: List<Bill>): List<RecordUiModel> {
-        if (bills.isEmpty()) return emptyList()
-
-        val grouped = bills.groupBy {
-            it.year * 10_000 + it.month * 100 + it.day
-        }
-
-        val result = mutableListOf<RecordUiModel>()
-
-        grouped.toSortedMap(compareByDescending { it }).forEach { (_, dayBills) ->
-            val first = dayBills.first()
-            val total = dayBills.sumOf { it.amount }
-
-            result.add(
-                RecordUiModel.Header(
-                    date = "${first.year}/${first.month}/${first.day}",
-                    weekDay = first.weekDay,
-                    totalAmount = total
-                )
-            )
-
-            dayBills.sortedByDescending { it.date }.forEach {
-                result.add(RecordUiModel.Item(it))
-            }
-        }
-        return result
-    }
 
     override fun onActivityResult(
         requestCode: Int,

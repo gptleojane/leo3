@@ -5,10 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import android.widget.Toast.LENGTH_LONG
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.leo3.R
 import com.example.leo3.data.firebase.FirestoreHelper
 import com.example.leo3.data.model.Bill
 import com.example.leo3.data.model.CategoryStatItem
@@ -52,6 +51,17 @@ class StatFragment : Fragment() {
         _binding = null
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        childFragmentManager.addOnBackStackChangedListener {
+            if (childFragmentManager.backStackEntryCount == 0) {
+                binding.statDetailContainer.visibility = View.GONE
+            }
+        }
+    }
+
+
     fun reload() {
         loadStatData()
     }
@@ -64,7 +74,7 @@ class StatFragment : Fragment() {
         binding.statCurrentYear.text = "${currentYear}年"
         binding.statCurrentMonth.text = "全部月份"
 
-        binding.statCategoryRecycler.layoutManager =
+        binding.statCategoryRecyclerExpense.layoutManager =
             LinearLayoutManager(requireContext())
 
         binding.statCategoryRecyclerIncome.layoutManager =
@@ -171,11 +181,21 @@ class StatFragment : Fragment() {
         totalExpense: Long,
         totalIncome: Long
     ) {
-        binding.statCategoryRecycler.adapter =
-            StatCategoryAdapter(expenseList)
+        binding.statCategoryRecyclerExpense.adapter =
+            StatCategoryAdapter(expenseList) { item ->
+                openStatDetail(
+                    categoryName = item.categoryName,
+                    type = "expense"
+                )
+            }
 
         binding.statCategoryRecyclerIncome.adapter =
-            StatCategoryAdapter(incomeList)
+            StatCategoryAdapter(incomeList) { item ->
+                openStatDetail(
+                    categoryName = item.categoryName,
+                    type = "income"
+                )
+            }
 
         binding.statExpenseSummary.text =
             "共 ${expenseList.size} 個分類"
@@ -187,6 +207,7 @@ class StatFragment : Fragment() {
         binding.statTotalIncome.text = "$$totalIncome"
         binding.statTotalBalance.text = "$${totalIncome - totalExpense}"
     }
+
 
     private fun showYearPopupMenu() {
         val popup = PopupMenu(requireContext(), binding.statYearSelector)
@@ -229,6 +250,28 @@ class StatFragment : Fragment() {
 
         popup.show()
     }
+
+    private fun openStatDetail(
+        categoryName: String,
+        type: String
+    ) {
+        binding.statDetailContainer.visibility = View.VISIBLE
+
+        val fragment = StatDetailFragment().apply {
+            arguments = Bundle().apply {
+                putString("category", categoryName)
+                putString("type", type)
+                putInt("year", currentYear)
+                putInt("month", currentMonth ?: -1)
+            }
+        }
+
+        childFragmentManager.beginTransaction()
+            .replace(R.id.statDetailContainer, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
 
 
 }
