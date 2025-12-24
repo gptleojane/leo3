@@ -4,7 +4,6 @@ import com.example.leo3.data.model.Bill
 import com.example.leo3.data.model.RecordUiModel
 
 object RecordUiBuilder {
-
     fun build(bills: List<Bill>): List<RecordUiModel> {
         if (bills.isEmpty()) return emptyList()
 

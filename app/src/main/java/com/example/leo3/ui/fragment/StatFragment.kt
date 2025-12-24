@@ -13,6 +13,7 @@ import com.example.leo3.data.model.Bill
 import com.example.leo3.data.model.CategoryStatItem
 import com.example.leo3.databinding.FragmentStatBinding
 import com.example.leo3.ui.adapter.StatCategoryAdapter
+import com.example.leo3.util.AppFlags
 import com.example.leo3.util.UserManager
 import com.google.android.material.snackbar.Snackbar
 import java.util.Calendar
@@ -57,6 +58,11 @@ class StatFragment : Fragment() {
         childFragmentManager.addOnBackStackChangedListener {
             if (childFragmentManager.backStackEntryCount == 0) {
                 binding.statDetailContainer.visibility = View.GONE
+
+                if (AppFlags.reloadData) {
+                    AppFlags.reloadData = false
+                    reload() // 重新抓 Stat
+                }
             }
         }
     }
@@ -151,6 +157,7 @@ class StatFragment : Fragment() {
             .groupBy { it.categoryId }
             .map { (categoryId, list) ->
                 CategoryStatItem(
+                    categoryId = categoryId,
                     categoryName = categoryMap[categoryId] ?: "未分類",
                     totalAmount = list.sumOf { it.amount }
                 )
@@ -161,6 +168,7 @@ class StatFragment : Fragment() {
             .groupBy { it.categoryId }
             .map { (categoryId, list) ->
                 CategoryStatItem(
+                    categoryId = categoryId,
                     categoryName = categoryMap[categoryId] ?: "未分類",
                     totalAmount = list.sumOf { it.amount }
                 )
@@ -184,6 +192,7 @@ class StatFragment : Fragment() {
         binding.statCategoryRecyclerExpense.adapter =
             StatCategoryAdapter(expenseList) { item ->
                 openStatDetail(
+                    categoryId = item.categoryId,
                     categoryName = item.categoryName,
                     type = "expense"
                 )
@@ -192,6 +201,7 @@ class StatFragment : Fragment() {
         binding.statCategoryRecyclerIncome.adapter =
             StatCategoryAdapter(incomeList) { item ->
                 openStatDetail(
+                    categoryId = item.categoryId,
                     categoryName = item.categoryName,
                     type = "income"
                 )
@@ -252,6 +262,7 @@ class StatFragment : Fragment() {
     }
 
     private fun openStatDetail(
+        categoryId: String,
         categoryName: String,
         type: String
     ) {
@@ -259,6 +270,7 @@ class StatFragment : Fragment() {
 
         val fragment = StatDetailFragment().apply {
             arguments = Bundle().apply {
+                putString("categoryId", categoryId)
                 putString("category", categoryName)
                 putString("type", type)
                 putInt("year", currentYear)

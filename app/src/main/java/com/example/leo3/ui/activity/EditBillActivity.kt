@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
@@ -270,5 +271,7 @@ class EditBillActivity : AppCompatActivity() {
     private fun renderAmount() {
         binding.editbillTvAmount.text = "$" + "%,d".format(amount)
     }
+
+
 
 }

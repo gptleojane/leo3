@@ -196,9 +196,15 @@ object FirestoreHelper {
             .whereEqualTo("year", year)
             .get()
             .addOnSuccessListener { qs ->
-                onResult(qs.toObjects(Bill::class.java))
+                val list = qs.documents.mapNotNull { doc ->
+                    doc.toObject(Bill::class.java)?.apply {
+                        id = doc.id   // ★ 關鍵：補上 Firestore documentId
+                    }
+                }
+                onResult(list)
             }
     }
+
 
     // ------------------------
 // EditBill 專用
