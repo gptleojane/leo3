@@ -123,12 +123,23 @@ class AddBillActivity : AppCompatActivity() {
 
         val category = selectedCategory ?: return
 
-        // 2. 日期
-        val dateStr = binding.addbillTietDate.text.toString()
+        //  日期
+        val dateStr = binding.addbillTietDate.text.toString().trim()
         val parts = dateStr.split("/")
-        val year = parts[0].toInt()
-        val month = parts[1].toInt()
-        val day = parts[2].toInt()
+
+        if (parts.size != 3) {
+            Toast.makeText(this, "日期格式錯誤", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val year = parts[0].toIntOrNull()
+        val month = parts[1].toIntOrNull()
+        val day = parts[2].toIntOrNull()
+
+        if (year == null || month == null || day == null) {
+            Toast.makeText(this, "日期格式錯誤", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         val cal = Calendar.getInstance().apply {
             set(year, month - 1, day)
@@ -161,6 +172,8 @@ class AddBillActivity : AppCompatActivity() {
 
         val account = UserManager.getAccount(this) ?: return
         FirestoreHelper.addBill(account, billData) {
+
+            if (isFinishing || isDestroyed) return@addBill
 
             AppFlags.reloadData = true
 

@@ -114,10 +114,13 @@ class QuickAddDialog : DialogFragment() {
 
             // ⭐ 第 3 步：新增資料
             FirestoreHelper.addBill(account, billData) {
-                Toast.makeText(requireContext(), "新增成功", Toast.LENGTH_SHORT).show()
+                if (!isAdded) return@addBill
 
+                context?.let {
+                    Toast.makeText(it, "新增成功", Toast.LENGTH_SHORT).show()
+                }
                 onAdded?.invoke()
-                dismiss()
+                if (isAdded) dismissAllowingStateLoss()
             }
         }
     }

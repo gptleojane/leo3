@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
@@ -196,10 +195,22 @@ class EditBillActivity : AppCompatActivity() {
         val newDateText = binding.editbillTietDate.text.toString()
         val oldDateText = "${bill.year}/${bill.month}/${bill.day}"
 
-        val dateParts = binding.editbillTietDate.text.toString().split("/")
-        val year = dateParts[0].toInt()
-        val month = dateParts[1].toInt()
-        val day = dateParts[2].toInt()
+        val dateStr = binding.editbillTietDate.text.toString().trim()
+        val dateParts = dateStr.split("/")
+
+        if (dateParts.size != 3) {
+            Toast.makeText(this, "日期格式錯誤", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val year = dateParts[0].toIntOrNull()
+        val month = dateParts[1].toIntOrNull()
+        val day = dateParts[2].toIntOrNull()
+
+        if (year == null || month == null || day == null) {
+            Toast.makeText(this, "日期格式錯誤", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         val cal = Calendar.getInstance().apply {
             set(year, month - 1, day)
@@ -227,6 +238,9 @@ class EditBillActivity : AppCompatActivity() {
         )
 
         FirestoreHelper.updateBill(account, billId, data) {
+
+            if (isFinishing || isDestroyed) return@updateBill
+
             AppFlags.reloadData = true
             setResult(RESULT_OK)
             finish()
