@@ -36,6 +36,8 @@ class EditBillActivity : AppCompatActivity() {
 
     private var selectedCategory: CategoryItem? = null
     private var amount: Long = 0L
+    private var originalDate: Timestamp? = null
+
 
     private val editCategoryLauncher =
         registerForActivityResult(
@@ -103,6 +105,7 @@ class EditBillActivity : AppCompatActivity() {
             }
 
             currentBill = bill
+            originalDate =bill.date
             amount = bill.amount
 
             renderBillToUI(bill)
@@ -188,6 +191,10 @@ class EditBillActivity : AppCompatActivity() {
     private fun updateBill() {
         val category = selectedCategory ?: return
         val account = UserManager.getAccount(this) ?: return
+        val bill =currentBill ?:return
+
+        val newDateText = binding.editbillTietDate.text.toString()
+        val oldDateText = "${bill.year}/${bill.month}/${bill.day}"
 
         val dateParts = binding.editbillTietDate.text.toString().split("/")
         val year = dateParts[0].toInt()
@@ -198,6 +205,12 @@ class EditBillActivity : AppCompatActivity() {
             set(year, month - 1, day)
         }
 
+        val finalDate = if (newDateText == oldDateText) {
+            originalDate ?: Timestamp(cal.time) // 防呆
+        } else {
+            Timestamp(cal.time)
+        }
+
         val noteInput = binding.editbillTietNote.text.toString()
         val note = noteInput.ifBlank { category.name }
 
@@ -205,7 +218,7 @@ class EditBillActivity : AppCompatActivity() {
             "type" to (if (binding.editbillMbExpense.isChecked) "expense" else "income"),
             "amount" to amount,
             "note" to note,
-            "date" to Timestamp(cal.time),
+            "date" to finalDate,
             "year" to year,
             "month" to month,
             "day" to day,
@@ -215,6 +228,7 @@ class EditBillActivity : AppCompatActivity() {
 
         FirestoreHelper.updateBill(account, billId, data) {
             AppFlags.reloadData = true
+            setResult(RESULT_OK)
             finish()
         }
     }
@@ -226,6 +240,7 @@ class EditBillActivity : AppCompatActivity() {
 
         FirestoreHelper.deleteBill(account, billId) {
             AppFlags.reloadData = true
+            setResult(RESULT_OK)
             finish()
         }
     }

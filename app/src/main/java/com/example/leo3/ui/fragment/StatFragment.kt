@@ -55,14 +55,15 @@ class StatFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        if (AppFlags.reloadData) {
+            AppFlags.reloadData = false
+            reload()
+        }
+
+        // 你原本這段保留
         childFragmentManager.addOnBackStackChangedListener {
             if (childFragmentManager.backStackEntryCount == 0) {
                 binding.statDetailContainer.visibility = View.GONE
-
-                if (AppFlags.reloadData) {
-                    AppFlags.reloadData = false
-                    reload() // 重新抓 Stat
-                }
             }
         }
     }
@@ -94,10 +95,15 @@ class StatFragment : Fragment() {
             showMonthPopupMenu()
         }
 
+        binding.statIv.setOnClickListener {
+            reload()
+        }
+
+
         binding.statTvHint.setOnClickListener {
             Snackbar.make(
                 binding.root,
-                "\uD83D\uDCC5 點左上角可回到今天\n" + "✏\uFE0F 點選項目可編輯或刪除\n",
+                "\uD83D\uDCC5 點左上角可回到今天\n" + "\uD83D\uDCCA 點選分類查看明細",
                 Snackbar.LENGTH_LONG
             ).show()
         }

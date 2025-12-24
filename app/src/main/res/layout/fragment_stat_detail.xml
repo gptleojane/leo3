@@ -19,23 +19,23 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginRight="30dp"
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/stat_iv"
+                android:id="@+id/statDetail_iv"
                 android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:clickable="true"
                 android:contentDescription="@null"
                 android:focusable="true"
-                android:src="@drawable/year"
+                android:src="@drawable/back2"
                 app:tint="@color/text_primary" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/stat_year_selector"
+            android:id="@+id/statDetail_year_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
@@ -43,7 +43,7 @@
             android:padding="9dp">
 
             <TextView
-                android:id="@+id/stat_current_year"
+                android:id="@+id/statDetail_current_year"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="2025年"
@@ -60,7 +60,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/stat_month_selector"
+            android:id="@+id/statDetail_month_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -69,7 +69,7 @@
             android:padding="9dp">
 
             <TextView
-                android:id="@+id/stat_current_month"
+                android:id="@+id/statDetail_current_month"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="全部月份"
@@ -86,7 +86,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/stat_tv_hint"
+            android:id="@+id/statDetail_tv_hint"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="end|center"
@@ -115,7 +115,7 @@
             android:paddingStart="8dp">
 
             <TextView
-                android:id="@+id/stat_total_expenseTitle"
+                android:id="@+id/statDetail_tv_expenseTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="支出"
@@ -123,7 +123,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/stat_total_expense"
+                android:id="@+id/statDetail_tv_expenseAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="$0"
@@ -141,12 +141,12 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/stat_category_title"
+                android:id="@+id/statDetail_tv_category"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="分類名稱"
                 android:textColor="@color/text_primary"
-                android:textSize="20sp" />
+                android:textSize="24sp" />
 
         </LinearLayout>
 
@@ -160,7 +160,7 @@
             android:paddingEnd="8dp">
 
             <TextView
-                android:id="@+id/stat_total_incomeTitle"
+                android:id="@+id/statDetail_tv_incomeTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="收入"
@@ -168,7 +168,7 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/stat_total_income"
+                android:id="@+id/statDetail_tv_incomeAmount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="$0"
