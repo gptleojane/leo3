@@ -34,7 +34,7 @@ class QuickAddDialog : DialogFragment() {
 
         //  設置寬度
         dialog?.window?.setLayout(
-            (resources.displayMetrics.widthPixels * 0.7).toInt(),
+            (resources.displayMetrics.widthPixels * 0.8).toInt(),
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
     }

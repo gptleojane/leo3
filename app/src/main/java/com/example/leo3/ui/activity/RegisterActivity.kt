@@ -38,28 +38,37 @@ class RegisterActivity : AppCompatActivity() {
         val account = binding.registerTietAccount.text.toString()
         val password = binding.registerTietPassword.text.toString()
 
-        // 基本驗證
+        val passwordRegex = Regex("^[A-Za-z0-9]+$")
+
+
+
+
         if (account.isBlank() || password.isBlank()) {
-            toast("帳號密碼不能空白")
+            Toast.makeText(this,"帳號密碼不能空白",Toast.LENGTH_SHORT).show()
             return
         }
         if (password.length < 3) {
-            toast("密碼至少 3 字")
+            Toast.makeText(this,"密碼至少 3 字",Toast.LENGTH_SHORT).show()
             return
         }
+        if (!passwordRegex.matches(password)) {
+            Toast.makeText(this,"密碼只能包含英文與數字",Toast.LENGTH_SHORT).show()
+            return
+        }
+
         if (account.length > 20) {
-            toast("帳號不能超過 20 字")
+            Toast.makeText(this,"帳號不能超過 20 字",Toast.LENGTH_SHORT).show()
             return
         }
         if (account.contains("/")) {
-            toast("帳號不能包含 / 字元")
+            Toast.makeText(this,"帳號不能包含 / 字元",Toast.LENGTH_SHORT).show()
             return
         }
 
         // ⭐ 第一步：檢查帳號是否已存在
         FirestoreHelper.getUser(account) { userData ->
             if (userData != null) {
-                toast("帳號已存在")
+                Toast.makeText(this,"帳號已存在",Toast.LENGTH_SHORT).show()
                 return@getUser
             }
 
@@ -71,20 +80,16 @@ class RegisterActivity : AppCompatActivity() {
                     // ⭐ 第三步：建立預設分類
                     FirestoreHelper.createDefaultCategories(account) {
 
-                        toast("註冊成功")
+                        Toast.makeText(this,"註冊成功",Toast.LENGTH_SHORT).show()
 
                         startActivity(Intent(this, LoginActivity::class.java))
                         finish()
                     }
                 },
                 onFail = { e ->
-                    toast("註冊失敗：${e.message}")
+                    Toast.makeText(this,"註冊失敗：${e.message}",Toast.LENGTH_SHORT).show()
                 }
             )
         }
-    }
-
-    private fun toast(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 }

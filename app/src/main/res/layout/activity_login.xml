@@ -67,6 +67,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/password"
             android:inputType="textPassword"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
             android:textColor="@color/text_primary"
             android:textColorHint="@color/text_hint"/>
     </com.google.android.material.textfield.TextInputLayout>

@@ -43,6 +43,17 @@
             app:iconSize="24dp" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
+    <TextView
+        android:id="@+id/editcate_tv_guide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="① 點選上方分類 → ② 修改 / 刪除 或新增"
+        android:textColor="@color/text_hint"
+        android:textSize="14sp" />
+
+
     <!-- ================== 分類清單 ================== -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/editcate_recyclerView"
@@ -126,7 +137,6 @@
                     android:text="" />
 
                 <com.google.android.material.button.MaterialButton
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:id="@+id/editcate_btn_delete"
                     android:layout_width="0dp"
                     android:layout_height="48dp"

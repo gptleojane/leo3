@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:text="$0"
-        android:textSize="30sp"
+        android:textSize="32sp"
         android:textStyle="bold"
         android:gravity="center"
         android:layout_gravity="center"
@@ -64,35 +64,34 @@
         <GridLayout
             android:id="@+id/number_pad"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:columnCount="3"
             android:rowCount="4">
 
-            <!-- 1 -->
             <com.google.android.material.button.MaterialButton
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:id="@+id/np_1"
-                android:text="1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_columnWeight="1"
-                app:cornerRadius="16dp"
-                app:strokeWidth="0dp"
+                android:text="1"
+                android:layout_marginEnd="2dp"
+                android:textSize="20sp"
+                android:textColor="@color/text_primary"
                 app:backgroundTint="@color/number_pad_button_bg"
-                android:textColor="@color/text_primary" />
+                app:cornerRadius="16dp"
+                app:strokeWidth="0dp" />
 
-            <!-- 2 -->
             <com.google.android.material.button.MaterialButton
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:id="@+id/np_2"
                 android:text="2"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_columnWeight="1"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="20sp"
                 app:backgroundTint="@color/number_pad_button_bg"
                 android:textColor="@color/text_primary" />
 
@@ -102,10 +101,12 @@
                 android:id="@+id/np_3"
                 android:text="3"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_columnWeight="1"
+                android:layout_marginStart="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="20sp"
                 app:backgroundTint="@color/number_pad_button_bg"
                 android:textColor="@color/text_primary" />
 
@@ -115,10 +116,12 @@
                 android:id="@+id/np_4"
                 android:text="4"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_columnWeight="1"
+                android:layout_marginEnd="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="20sp"
                 app:backgroundTint="@color/number_pad_button_bg"
                 android:textColor="@color/text_primary" />
 
@@ -128,12 +131,13 @@
                 android:id="@+id/np_5"
                 android:text="5"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_columnWeight="1"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="20sp"
                 app:backgroundTint="@color/number_pad_button_bg"
                 android:textColor="@color/text_primary" />
 
@@ -143,10 +147,12 @@
                 android:id="@+id/np_6"
                 android:text="6"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_columnWeight="1"
+                android:layout_marginStart="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="20sp"
                 app:backgroundTint="@color/number_pad_button_bg"
                 android:textColor="@color/text_primary" />
 
@@ -156,10 +162,12 @@
                 android:id="@+id/np_7"
                 android:text="7"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_columnWeight="1"
+                android:layout_marginEnd="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="20sp"
                 app:backgroundTint="@color/number_pad_button_bg"
                 android:textColor="@color/text_primary" />
 
@@ -169,12 +177,13 @@
                 android:id="@+id/np_8"
                 android:text="8"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_columnWeight="1"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="20sp"
                 app:backgroundTint="@color/number_pad_button_bg"
                 android:textColor="@color/text_primary" />
 
@@ -184,10 +193,12 @@
                 android:id="@+id/np_9"
                 android:text="9"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_columnWeight="1"
+                android:layout_marginStart="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="20sp"
                 app:backgroundTint="@color/number_pad_button_bg"
                 android:textColor="@color/text_primary" />
 
@@ -197,10 +208,12 @@
                 android:id="@+id/np_expense"
                 android:text="支出"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_columnWeight="1"
+                android:layout_marginEnd="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="18sp"
                 app:backgroundTint="@color/expense_red_light"
                 android:textColor="@color/bg_card" />
 
@@ -210,12 +223,13 @@
                 android:id="@+id/np_0"
                 android:text="0"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_columnWeight="1"
                 android:layout_marginStart="2dp"
                 android:layout_marginEnd="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="20sp"
                 app:backgroundTint="@color/number_pad_button_bg"
                 android:textColor="@color/text_primary" />
 
@@ -225,15 +239,16 @@
                 android:id="@+id/np_income"
                 android:text="收入"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_columnWeight="1"
+                android:layout_marginStart="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="18sp"
                 app:backgroundTint="@color/income_blue_light"
                 android:textColor="@color/bg_card" />
 
         </GridLayout>
-
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -242,7 +257,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="👇長按下方「＋」可進入完整記帳👇"
-        android:textSize="10sp"
+        android:textSize="12sp"
         android:textColor="@color/text_hint"
         android:layout_gravity="center"
         android:paddingTop="3dp"/>

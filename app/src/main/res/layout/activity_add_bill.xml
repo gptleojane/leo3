@@ -187,7 +187,7 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/number_pad_container"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
@@ -198,10 +198,10 @@
         <GridLayout
             android:id="@+id/number_pad"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:columnCount="3"
             android:rowCount="4"
-            android:padding="8dp">
+            android:padding="6dp">
 
             <!-- 1 -->
             <com.google.android.material.button.MaterialButton
@@ -211,9 +211,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="64dp"
                 android:layout_columnWeight="1"
-                android:layout_margin="4dp"
+                android:layout_margin="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="24sp"
                 app:backgroundTint="@color/number_pad_button_bg"
                 android:textColor="@color/text_primary" />
 
@@ -225,9 +226,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="64dp"
                 android:layout_columnWeight="1"
-                android:layout_margin="4dp"
+                android:layout_margin="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="24sp"
                 app:backgroundTint="@color/number_pad_button_bg"
                 android:textColor="@color/text_primary" />
 
@@ -239,9 +241,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="64dp"
                 android:layout_columnWeight="1"
-                android:layout_margin="4dp"
+                android:layout_margin="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="24sp"
                 app:backgroundTint="@color/number_pad_button_bg"
                 android:textColor="@color/text_primary" />
 
@@ -253,9 +256,10 @@
                 android:layout_width="0dp"
                 android:layout_height="64dp"
                 android:layout_columnWeight="1"
-                android:layout_margin="4dp"
+                android:layout_margin="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="24sp"
                 app:backgroundTint="@color/number_pad_button_bg"
                 android:textColor="@color/text_primary" />
 
@@ -267,9 +271,10 @@
                 android:layout_width="0dp"
                 android:layout_height="64dp"
                 android:layout_columnWeight="1"
-                android:layout_margin="4dp"
+                android:layout_margin="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="24sp"
                 app:backgroundTint="@color/number_pad_button_bg"
                 android:textColor="@color/text_primary" />
 
@@ -281,9 +286,10 @@
                 android:layout_width="0dp"
                 android:layout_height="64dp"
                 android:layout_columnWeight="1"
-                android:layout_margin="4dp"
+                android:layout_margin="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="24sp"
                 app:backgroundTint="@color/number_pad_button_bg"
                 android:textColor="@color/text_primary" />
 
@@ -295,9 +301,10 @@
                 android:layout_width="0dp"
                 android:layout_height="64dp"
                 android:layout_columnWeight="1"
-                android:layout_margin="4dp"
+                android:layout_margin="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="24sp"
                 app:backgroundTint="@color/number_pad_button_bg"
                 android:textColor="@color/text_primary" />
 
@@ -309,9 +316,10 @@
                 android:layout_width="0dp"
                 android:layout_height="64dp"
                 android:layout_columnWeight="1"
-                android:layout_margin="4dp"
+                android:layout_margin="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="24sp"
                 app:backgroundTint="@color/number_pad_button_bg"
                 android:textColor="@color/text_primary" />
 
@@ -323,9 +331,10 @@
                 android:layout_width="0dp"
                 android:layout_height="64dp"
                 android:layout_columnWeight="1"
-                android:layout_margin="4dp"
+                android:layout_margin="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="24sp"
                 app:backgroundTint="@color/number_pad_button_bg"
                 android:textColor="@color/text_primary" />
 
@@ -337,9 +346,10 @@
                 android:layout_width="0dp"
                 android:layout_height="64dp"
                 android:layout_columnWeight="1"
-                android:layout_margin="4dp"
+                android:layout_margin="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="24sp"
                 app:backgroundTint="@color/expense_orange"
                 android:textColor="@color/bg_card" />
 
@@ -351,9 +361,10 @@
                 android:layout_width="0dp"
                 android:layout_height="64dp"
                 android:layout_columnWeight="1"
-                android:layout_margin="4dp"
+                android:layout_margin="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="24sp"
                 app:backgroundTint="@color/number_pad_button_bg"
                 android:textColor="@color/text_primary" />
 
@@ -365,9 +376,10 @@
                 android:layout_width="0dp"
                 android:layout_height="64dp"
                 android:layout_columnWeight="1"
-                android:layout_margin="4dp"
+                android:layout_margin="2dp"
                 app:cornerRadius="16dp"
                 app:strokeWidth="0dp"
+                android:textSize="24sp"
                 app:backgroundTint="@color/income_blue"
                 android:textColor="@color/bg_card" />
 

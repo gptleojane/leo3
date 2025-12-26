@@ -162,17 +162,27 @@ object FirestoreHelper {
 
         val expenseCategories = listOf(
             mapOf("name" to "未分類", "type" to "expense", "sortOrder" to 0, "fixed" to true),
-            mapOf("name" to "食", "type" to "expense", "sortOrder" to 1, "fixed" to false),
-            mapOf("name" to "衣", "type" to "expense", "sortOrder" to 2, "fixed" to false),
-            mapOf("name" to "住", "type" to "expense", "sortOrder" to 3, "fixed" to false),
-            mapOf("name" to "行", "type" to "expense", "sortOrder" to 4, "fixed" to false)
+
+            mapOf("name" to "餐飲", "type" to "expense", "sortOrder" to 1, "fixed" to false),
+            mapOf("name" to "交通", "type" to "expense", "sortOrder" to 2, "fixed" to false),
+            mapOf("name" to "購物", "type" to "expense", "sortOrder" to 3, "fixed" to false),
+            mapOf("name" to "住房", "type" to "expense", "sortOrder" to 4, "fixed" to false),
+            mapOf("name" to "生活用品", "type" to "expense", "sortOrder" to 5, "fixed" to false),
+            mapOf("name" to "娛樂", "type" to "expense", "sortOrder" to 6, "fixed" to false),
+            mapOf("name" to "醫療", "type" to "expense", "sortOrder" to 7, "fixed" to false),
+            mapOf("name" to "教育", "type" to "expense", "sortOrder" to 8, "fixed" to false),
+            mapOf("name" to "通訊", "type" to "expense", "sortOrder" to 9, "fixed" to false),
+            mapOf("name" to "其他支出", "type" to "expense", "sortOrder" to 10, "fixed" to false)
         )
 
         val incomeCategories = listOf(
             mapOf("name" to "未分類", "type" to "income", "sortOrder" to 0, "fixed" to true),
-            mapOf("name" to "薪水", "type" to "income", "sortOrder" to 1, "fixed" to false),
+
+            mapOf("name" to "薪資收入", "type" to "income", "sortOrder" to 1, "fixed" to false),
             mapOf("name" to "獎金", "type" to "income", "sortOrder" to 2, "fixed" to false),
-            mapOf("name" to "其他", "type" to "income", "sortOrder" to 3, "fixed" to false)
+            mapOf("name" to "兼職收入", "type" to "income", "sortOrder" to 3, "fixed" to false),
+            mapOf("name" to "投資收入", "type" to "income", "sortOrder" to 4, "fixed" to false),
+            mapOf("name" to "其他收入", "type" to "income", "sortOrder" to 5, "fixed" to false)
         )
 
         val batch = db.batch()

@@ -23,15 +23,49 @@ class ExchangeRate : AppCompatActivity() {
     private var amountTwd: Long = 0L
 
     private val currencyList = listOf(
-        "TWD", "USD", "JPY", "CNY", "EUR"
+        "台幣 (TWD)",
+        "美元 (USD)",
+        "日圓 (JPY)",
+        "人民幣 (CNY)",
+        "歐元 (EUR)",
+        "港幣 (HKD)",
+        "韓元 (KRW)",
+        "新加坡幣 (SGD)",
+        "英鎊 (GBP)",
+        "澳幣 (AUD)",
+        "加幣 (CAD)",
+        "瑞士法郎 (CHF)",
+        "泰銖 (THB)",
+        "馬來西亞令吉 (MYR)",
+        "菲律賓披索 (PHP)",
+        "印尼盾 (IDR)",
+        "越南盾 (VND)",
+        "紐西蘭幣 (NZD)",
+        "印度盧比 (INR)",
+        "澳門幣 (MOP)"
     )
 
     private val rateMap = mapOf(
-        "TWD" to 1.0,
-        "USD" to 31.5,
-        "JPY" to 0.21,
-        "CNY" to 4.4,
-        "EUR" to 34.0
+        "台幣 (TWD)" to 1.0,
+        "美元 (USD)" to 31.5,
+        "日圓 (JPY)" to 0.21,
+        "人民幣 (CNY)" to 4.4,
+        "歐元 (EUR)" to 34.0,
+        "港幣 (HKD)" to 4.03,
+        "韓元 (KRW)" to 0.024,
+        "新加坡幣 (SGD)" to 23.3,
+        "英鎊 (GBP)" to 39.5,
+        "澳幣 (AUD)" to 21.0,
+        "加幣 (CAD)" to 23.5,
+        "瑞士法郎 (CHF)" to 35.8,
+        "泰銖 (THB)" to 0.88,
+        "馬來西亞令吉 (MYR)" to 6.7,
+        "菲律賓披索 (PHP)" to 0.56,
+        "印尼盾 (IDR)" to 0.0020,
+        "越南盾 (VND)" to 0.0013,
+        "紐西蘭幣 (NZD)" to 19.6,
+        "印度盧比 (INR)" to 0.38,
+        "澳門幣 (MOP)" to 3.9
     )
 
     private lateinit var left: Side
@@ -192,9 +226,8 @@ class ExchangeRate : AppCompatActivity() {
 
     private fun renderSide(side: Side) {
         val rate = rateMap[side.current] ?: 1.0
-        val value = amountTwd / rate
-        side.result.text =
-            "${"%,.2f".format(value)}"
+        val value = amountTwd.toDouble() / rate
+        side.result.text = "${"%,.2f".format(value)}"
     }
 
     private data class Side(

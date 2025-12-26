@@ -84,23 +84,36 @@ class EditCategoryActivity : AppCompatActivity() {
         binding.editcateTvCategoryHint.text = "尚未選擇分類"
         binding.editcateTvTypeHint.text = "尚未選擇類別 (支出 / 收入)"
 
+        // ⭐ 關鍵：先鎖住按鈕
+        binding.editcateBtnUpdate.isEnabled = false
+        binding.editcateBtnDelete.isEnabled = false
+        binding.editcateBtnAdd.isEnabled = false
+
+
     }
 
     private fun setupTypeToggle() {
         binding.editcateMbtgType.addOnButtonCheckedListener { _, checkedId, isChecked ->
+
+
             if (!isChecked) return@addOnButtonCheckedListener
 
             selectedType = when (checkedId) {
                 R.id.editcate_mb_expense -> "expense"
                 R.id.editcate_mb_income -> "income"
                 else -> null
+
             }
 
             var showType = if (selectedType == "expense") "支出" else "收入"
             binding.editcateTvTypeHint.text = "正在選擇：$showType"
 
+            binding.editcateBtnAdd.isEnabled = true
+
             selectedCategory = null
             loadCategories()
+
+
         }
     }
 
@@ -119,7 +132,20 @@ class EditCategoryActivity : AppCompatActivity() {
     private fun setupAdapter() {
         categoryAdapter = CategoryAdapter(categoryList, -1) { item ->
             selectedCategory = item
-            binding.editcateTvCategoryHint.text = "正在編輯：${item.name}"
+
+            if (item.fixed) {
+                binding.editcateTvCategoryHint.text =
+                    "正在編輯：${item.name}（系統預設無法編輯）"
+            } else {
+                binding.editcateTvCategoryHint.text =
+                    "正在編輯：${item.name}"
+
+                binding.editcateTietRename.setText(item.name)
+            }
+
+            // ⭐ 解鎖
+            binding.editcateBtnUpdate.isEnabled = !item.fixed
+            binding.editcateBtnDelete.isEnabled = !item.fixed
         }
         binding.editcateRecyclerView.adapter = categoryAdapter
     }
@@ -140,6 +166,11 @@ class EditCategoryActivity : AppCompatActivity() {
         val newName = binding.editcateTietRename.text.toString().trim()
         if (newName.isBlank()) {
             Toast.makeText(this, "請輸入新的分類名稱", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (newName.length > 4) {
+            Toast.makeText(this, "分類名稱最多 4 個字", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -169,6 +200,12 @@ class EditCategoryActivity : AppCompatActivity() {
             Toast.makeText(this, "請輸入分類名稱", Toast.LENGTH_SHORT).show()
             return
         }
+
+        if (name.length > 4) {
+            Toast.makeText(this, "分類名稱最多 4 個字", Toast.LENGTH_SHORT).show()
+            return
+        }
+
 
         val account = UserManager.getAccount(this) ?: return
 

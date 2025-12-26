@@ -3,11 +3,9 @@
 <resources>
 
 
-
-
     <!-- ===== 背景 ===== -->
     <!-- App 主背景（白中帶微灰，柔和） -->
-    <color name="bg_main">#FAFAFA</color>
+    <color name="bg_main">#FFF8F2</color>
 
     <!-- 卡片 / 區塊背景 -->
     <color name="bg_card">#FFFFFF</color>
