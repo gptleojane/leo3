@@ -5,11 +5,9 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.leo3.data.firebase.FirestoreHelper
-import com.example.leo3.databinding.ActivityAddBillBinding
 import com.example.leo3.databinding.ActivityLoginBinding
 import com.example.leo3.util.UserManager
 
@@ -38,8 +36,6 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-
-
         // 登入按鈕
         binding.loginBtLogin.setOnClickListener {
             login()
@@ -56,7 +52,7 @@ class LoginActivity : AppCompatActivity() {
         val password = binding.loginTietPassword.text.toString()
 
         if (account.isBlank() || password.isBlank()) {
-            toast("帳號或密碼不能空白")
+            Toast.makeText(this,"帳號或密碼不能空白",Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -64,21 +60,22 @@ class LoginActivity : AppCompatActivity() {
         FirestoreHelper.getUser(account) { data ->
 
             if (data == null) {
-                toast("帳號不存在")
+                Toast.makeText(this,"帳號不存在",Toast.LENGTH_SHORT).show()
+
                 return@getUser
             }
 
             val pwd = data["password"]?.toString() ?: ""
 
             if (pwd != password) {
-                toast("密碼錯誤")
+                Toast.makeText(this,"密碼錯誤",Toast.LENGTH_SHORT).show()
                 return@getUser
             }
 
             // ⭐ 登入成功 → 保存帳號
             UserManager.setAccount(this, account)
 
-            toast("登入成功")
+            Toast.makeText(this,"登入成功",Toast.LENGTH_SHORT).show()
             goMain()
         }
     }
@@ -89,7 +86,4 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun toast(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
-    }
 }

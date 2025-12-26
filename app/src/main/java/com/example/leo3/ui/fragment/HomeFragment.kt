@@ -90,11 +90,11 @@ class HomeFragment : Fragment() {
             val totalCount = todayBills.size
             val balance = incomeTotal - expenseTotal
 
-            binding.homeExpenseAmount.text = "$ $expenseTotal"
-            binding.homeIncomeAmount.text = "$ $incomeTotal"
-            binding.homeExpenseLabel.text = "$ $expenseTotal"
-            binding.homeIncomeLabel.text = "$ $incomeTotal"
-            binding.homeBalanceLabel.text = "$ $balance"
+            binding.homeExpenseAmount.text = "$$expenseTotal"
+            binding.homeIncomeAmount.text = "$$incomeTotal"
+            binding.homeExpenseLabel.text = "$$expenseTotal"
+            binding.homeIncomeLabel.text = "$$incomeTotal"
+            binding.homeBalanceLabel.text = "$$balance"
 
             if (totalCount == 0) {
                 binding.homeRecordHint.text = "今日還沒記帳哦 !"

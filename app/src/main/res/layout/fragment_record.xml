@@ -91,7 +91,7 @@
             android:gravity="end|center"
             android:paddingEnd="10dp"
             android:text="小提醒"
-            android:textSize="12dp"/>
+            android:textSize="14dp"/>
 
     </LinearLayout>
 
@@ -102,6 +102,8 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:paddingVertical="8dp">
 
         <!-- 支出 -->
@@ -109,7 +111,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
+            android:gravity="left"
             android:orientation="vertical">
 
             <TextView
@@ -118,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:text="月支出"
                 android:textColor="@color/text_secondary"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/record_summary_expense_amount"
@@ -127,7 +129,7 @@
                 android:paddingTop="4dp"
                 android:text="$0"
                 android:textColor="@color/expense_orange"
-                android:textSize="20sp" />
+                android:textSize="24sp" />
         </LinearLayout>
 
         <!-- 結餘 -->
@@ -144,7 +146,7 @@
                 android:layout_height="wrap_content"
                 android:text="月結餘"
                 android:textColor="@color/text_secondary"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/record_summary_balance_amount"
@@ -153,7 +155,7 @@
                 android:paddingTop="4dp"
                 android:text="$0"
                 android:textColor="@color/text_primary"
-                android:textSize="20sp" />
+                android:textSize="24sp" />
         </LinearLayout>
 
         <!-- 收入 -->
@@ -161,7 +163,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
+            android:gravity="right"
             android:orientation="vertical">
 
             <TextView
@@ -170,7 +172,7 @@
                 android:layout_height="wrap_content"
                 android:text="月收入"
                 android:textColor="@color/text_secondary"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/record_summary_income_amount"
@@ -179,7 +181,7 @@
                 android:paddingTop="4dp"
                 android:text="$0"
                 android:textColor="@color/income_blue"
-                android:textSize="20sp" />
+                android:textSize="24sp" />
         </LinearLayout>
 
     </LinearLayout>

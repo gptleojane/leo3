@@ -236,11 +236,14 @@ class EditCategoryActivity : AppCompatActivity() {
             .setTitle("確認刪除分類")
             .setMessage("刪除後，該分類底下的所有帳目將移至『未分類』\n此操作無法復原，確定要刪除嗎？")
             .setPositiveButton("確認") { _, _ ->
-                FirestoreHelper.deleteCategory(account, category.id) {
-                    selectedCategory = null
-                    callReload = true
-                    loadCategories()
-                }
+                FirestoreHelper.deleteCategoryAndMoveBills(
+                    account, category.id, category.type,) {
+                        Toast.makeText(this, "分類已刪除，帳目已移至未分類", Toast.LENGTH_SHORT).show()
+
+                        selectedCategory = null
+                        callReload = true
+                        loadCategories()
+                    }
             }
             .setNegativeButton("取消", null)
             .show()

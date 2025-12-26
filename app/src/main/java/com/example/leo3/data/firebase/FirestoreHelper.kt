@@ -328,6 +328,51 @@ object FirestoreHelper {
             .addOnSuccessListener { onSuccess() }
     }
 
+    fun deleteCategoryAndMoveBills(
+        account: String,
+        categoryId: String,
+        categoryType: String,
+        onSuccess: () -> Unit
+    ) {
+        val userRef = db.collection("users").document(account)
+        val categoriesRef = userRef.collection("categories")
+        val billsRef = userRef.collection("bills")
+
+        // Step 1：找同 type 的「未分類」（fixed == true）
+        categoriesRef
+            .whereEqualTo("type", categoryType)
+            .whereEqualTo("fixed", true)
+            .limit(1)
+            .get()
+            .addOnSuccessListener { catSnap ->
+
+                val unclassifiedId = catSnap.documents.first().id
+
+                // Step 2：找出所有使用該分類的 bills
+                billsRef
+                    .whereEqualTo("categoryId", categoryId)
+                    .get()
+                    .addOnSuccessListener { billSnap ->
+
+                        // Step 3：逐筆更新 bills（forEach）
+                        val tasks = billSnap.documents.map { doc ->
+                            doc.reference.update("categoryId", unclassifiedId)
+                        }
+
+                        // Step 4：等所有 bills 更新完成後，再刪分類
+                        com.google.android.gms.tasks.Tasks
+                            .whenAllComplete(tasks)
+                            .addOnSuccessListener {
+                                categoriesRef
+                                    .document(categoryId)
+                                    .delete()
+                                    .addOnSuccessListener { onSuccess() }
+                            }
+                    }
+            }
+    }
+
+
     fun clearAllBills(
         account: String,
         onSuccess: () -> Unit,
@@ -357,9 +402,6 @@ object FirestoreHelper {
                 onFail(e)
             }
     }
-
-
-
 
 
 }

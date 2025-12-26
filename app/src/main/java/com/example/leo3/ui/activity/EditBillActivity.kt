@@ -37,7 +37,6 @@ class EditBillActivity : AppCompatActivity() {
     private var amount: Long = 0L
     private var originalDate: Timestamp? = null
 
-
     private val editCategoryLauncher =
         registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -86,8 +85,6 @@ class EditBillActivity : AppCompatActivity() {
         binding.editbillBtEdit.setOnClickListener { updateBill() }
 
         binding.editbillBtDelete.setOnClickListener { deleteBill() }
-
-        binding.editbillBtBack.setOnClickListener { finish() }
 
         loadBillFromCloud()
 
@@ -300,7 +297,6 @@ class EditBillActivity : AppCompatActivity() {
     private fun renderAmount() {
         binding.editbillTvAmount.text = "$" + "%,d".format(amount)
     }
-
 
 
 }

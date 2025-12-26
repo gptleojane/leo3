@@ -19,18 +19,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="20dp"
             android:text="歡迎回來"
             android:textColor="@color/text_primary"
-            android:textSize="32sp"
+            android:textSize="40sp"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/home_userName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:text="TextView"
             android:textColor="@color/text_primary"
             android:textSize="22sp"
@@ -45,6 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="5dp"
+        android:textSize="16sp"
         android:text="今天是XXXX年XX月XX日 星期X"
         android:textColor="@color/text_primary" />
 
@@ -69,7 +70,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="今日支出"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textColor="@color/expense_red_light" />
 
             <TextView
@@ -78,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:text="$0"
                 android:textColor="@color/expense_red_light"
-                android:textSize="28sp"
+                android:textSize="32sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -93,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="今日收入"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textColor="@color/income_blue_light" />
 
             <TextView
@@ -102,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:text="$0"
                 android:textColor="@color/income_blue_light"
-                android:textSize="28sp"
+                android:textSize="32sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -117,6 +118,7 @@
         android:gravity="center"
         android:padding="12dp"
         android:text="今日已記帳X筆 | 今日還沒有記帳喔！"
+        android:textSize="18sp"
         android:textColor="@color/text_primary" />
 
 
@@ -132,8 +134,9 @@
             android:id="@+id/home_expenseLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1.9"
+            android:layout_weight="1.85"
             android:text="$0"
+            android:textSize="18sp"
             android:textColor="@color/expense_red_light" />
 
         <!-- 結餘 -->
@@ -143,6 +146,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="$0"
+            android:textSize="18sp"
             android:textColor="@color/text_primary" />
 
         <TextView
@@ -152,6 +156,7 @@
             android:layout_weight="1"
             android:gravity="end"
             android:text="$0"
+            android:textSize="18sp"
             android:textColor="@color/income_blue_light" />
     </LinearLayout>
 
@@ -168,7 +173,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
+            app:layout_constraintGuide_begin="194dp" />
 
         <!-- 支出 -->
         <View

@@ -84,6 +84,8 @@ class QuickAddDialog : DialogFragment() {
 
     private fun addBill(type: String) {
 
+        if(amount==0L)return
+
         val cal = Calendar.getInstance()
         val timestamp = com.google.firebase.Timestamp(cal.time)
 
