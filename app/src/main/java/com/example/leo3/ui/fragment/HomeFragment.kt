@@ -96,10 +96,12 @@ class HomeFragment : Fragment() {
             binding.homeIncomeLabel.text = "$$incomeTotal"
             binding.homeBalanceLabel.text = "$$balance"
 
-            if (expenseTotal > incomeTotal) {
-                binding.homeIvHappy.setImageResource(R.drawable.happy)
+            if(expenseTotal == incomeTotal){
+                binding.homeIvHappy.setImageResource(R.drawable.think)
+            }else if (expenseTotal > incomeTotal) {
+                binding.homeIvHappy.setImageResource(R.drawable.poor)
             }else{
-                binding.homeIvHappy.setImageResource(R.drawable.unhappy)
+                binding.homeIvHappy.setImageResource(R.drawable.happy)
             }
 
             //今日記帳幾筆
