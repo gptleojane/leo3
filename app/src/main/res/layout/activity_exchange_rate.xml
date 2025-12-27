@@ -31,6 +31,8 @@
         android:orientation="vertical">
 
         <!-- 金額顯示 -->
+
+        <!-- 說明文字 -->
         <TextView
             android:id="@+id/exchange_tv_amount"
             android:layout_width="match_parent"
@@ -42,17 +44,16 @@
             android:padding="12dp"
             android:text="$0"
             android:textColor="@color/text_primary"
-            android:textSize="32sp"
+            android:textSize="36sp"
             android:textStyle="bold" />
 
-        <!-- 說明文字 -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="下方輸入金額，可同時換算成兩種不同幣別"
             android:textColor="@color/text_hint"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
 
@@ -139,6 +140,12 @@
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="※ 匯率為示意固定值，非即時資料"
+        android:textSize="14sp" />
 
     <View
         android:layout_width="wrap_content"
@@ -155,7 +162,7 @@
         android:gravity="center"
         android:text="快速切換前一次幣別"
         android:textColor="@color/text_hint"
-        android:textSize="12sp" />
+        android:textSize="14sp" />
 
     <LinearLayout
         android:id="@+id/exchange_quick_currency"

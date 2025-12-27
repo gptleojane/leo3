@@ -9,6 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.leo3.data.firebase.FirestoreHelper
 import com.example.leo3.databinding.ActivityRegisterBinding
+import com.example.leo3.util.UserManager
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -27,6 +28,8 @@ class RegisterActivity : AppCompatActivity() {
             insets
         }
 
+        binding.registerSw.isChecked = true
+
         binding.registerBtBack.setOnClickListener { finish() }
 
         binding.registerBtRegister.setOnClickListener {
@@ -37,14 +40,19 @@ class RegisterActivity : AppCompatActivity() {
     private fun register() {
         val account = binding.registerTietAccount.text.toString()
         val password = binding.registerTietPassword.text.toString()
+        val checkPassword = binding.registerTietCheckPassword.text.toString()
 
         val passwordRegex = Regex("^[A-Za-z0-9]+$")
 
 
 
-
         if (account.isBlank() || password.isBlank()) {
             Toast.makeText(this, "帳號密碼不能空白", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (password != checkPassword) {
+            Toast.makeText(this, "兩次密碼不一致", Toast.LENGTH_SHORT).show()
             return
         }
         if (password.length < 3) {
@@ -82,8 +90,15 @@ class RegisterActivity : AppCompatActivity() {
 
                         Toast.makeText(this, "註冊成功", Toast.LENGTH_SHORT).show()
 
-                        startActivity(Intent(this, LoginActivity::class.java))
-                        finish()
+                        val autoLogin = binding.registerSw.isChecked
+                        if (autoLogin) {
+                            // ⭐ 使用者選擇「註冊後直接登入」
+                            UserManager.setAccount(this, account)
+                            goMain()
+                        } else {
+                            startActivity(Intent(this, LoginActivity::class.java))
+                            finish()
+                        }
                     }
                 },
                 onFail = { e ->
@@ -93,5 +108,11 @@ class RegisterActivity : AppCompatActivity() {
         }, onFail = {
             Toast.makeText(this, "網路錯誤，請稍後再試", Toast.LENGTH_SHORT).show()
         })
+    }
+
+    private fun goMain() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
     }
 }

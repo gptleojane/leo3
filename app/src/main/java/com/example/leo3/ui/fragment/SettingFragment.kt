@@ -14,7 +14,7 @@ import com.example.leo3.data.firebase.FirestoreHelper
 import com.example.leo3.databinding.FragmentSettingBinding
 import com.example.leo3.ui.activity.ChangePasswordActivity
 import com.example.leo3.ui.activity.EditCategoryActivity
-import com.example.leo3.ui.activity.ExchangeRate
+import com.example.leo3.ui.activity.ExchangeRateActivity
 import com.example.leo3.ui.activity.LoginActivity
 import com.example.leo3.util.AppFlags
 import com.example.leo3.util.UserManager
@@ -95,7 +95,7 @@ class SettingFragment : Fragment() {
 
         // ================= 功能設定 =================
         binding.settingFragmentSetExchangeRate.setOnClickListener {
-            val intent = Intent(requireContext(), ExchangeRate::class.java)
+            val intent = Intent(requireContext(), ExchangeRateActivity::class.java)
             startActivity(intent)
 
         }

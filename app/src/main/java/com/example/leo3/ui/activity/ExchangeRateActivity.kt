@@ -16,7 +16,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.leo3.databinding.ActivityExchangeRateBinding
 
 
-class ExchangeRate : AppCompatActivity() {
+class ExchangeRateActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityExchangeRateBinding
 

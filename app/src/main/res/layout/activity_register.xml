@@ -5,8 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="12dp"
-    android:background="@color/bg_main">
+    android:background="@color/bg_main"
+    android:paddingTop="12dp">
 
     <TextView
         android:id="@+id/register_tv_welcome"
@@ -14,9 +14,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="32dp"
-        android:textSize="40dp"
         android:text="@string/register"
         android:textColor="@color/text_primary"
+        android:textSize="40dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,12 +30,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/register_til_account"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="130dp"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="130dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -47,15 +48,16 @@
             android:layout_height="wrap_content"
             android:hint="@string/account"
             android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_hint"/>
+            android:textColorHint="@color/text_hint" />
     </com.google.android.material.textfield.TextInputLayout>
+
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/register_til_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
         android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintTop_toBottomOf="@+id/register_til_account">
 
@@ -63,37 +65,69 @@
             android:id="@+id/register_tiet_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/password"
-            android:inputType="textPassword"
             android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+            android:hint="@string/password"
             android:textColor="@color/text_primary"
-            android:textColorHint="@color/text_hint"/>
+            android:textColorHint="@color/text_hint" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/register_til_checkPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/register_til_password">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/register_tiet_checkPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+            android:hint="確認密碼"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
     <com.google.android.material.button.MaterialButton
-        app:cornerRadius="16dp"
         android:id="@+id/register_bt_register"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:textColor="@color/text_primary"
         android:text="@string/register"
-        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/register_til_password"/>
+        android:textColor="@color/text_primary"
+        app:cornerRadius="16dp"
+        app:layout_constraintTop_toBottomOf="@id/register_sw" />
 
     <com.google.android.material.button.MaterialButton
-        app:cornerRadius="16dp"
         android:id="@+id/register_bt_back"
-        android:layout_width="100dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:text="@string/back"
+        android:layout_marginBottom="50dp"
+        android:text="已有帳號？前往登入"
         android:textColor="@color/text_primary"
+        app:cornerRadius="16dp"
         app:icon="@drawable/back"
         app:iconSize="24dp"
-        android:layout_marginEnd="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/register_til_password"/>
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Switch
+        android:id="@+id/register_sw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="註冊完成後自動登入"
+        android:textSize="14dp"
+        android:textColor="@color/text_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/register_til_checkPassword" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
