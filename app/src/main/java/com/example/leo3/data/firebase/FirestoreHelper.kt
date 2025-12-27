@@ -4,15 +4,18 @@ import com.example.leo3.data.model.Bill
 import com.example.leo3.data.model.CategoryItem
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import java.util.Calendar
 
 object FirestoreHelper {
 
     private val db = FirebaseFirestore.getInstance()
 
-    // ------------------------
-    // 分類
-    // ------------------------
-    fun getCategories(account: String, type: String, onResult: (List<CategoryItem>) -> Unit) {
+    fun getCategories(
+        account: String,
+        type: String,
+        onResult: (List<CategoryItem>) -> Unit,
+        onFail: () -> Unit
+    ) {
         db.collection("users")
             .document(account)
             .collection("categories")
@@ -30,6 +33,9 @@ object FirestoreHelper {
                     )
                 }
                 onResult(list)
+            }
+            .addOnFailureListener {
+                onFail()
             }
     }
 
@@ -56,15 +62,25 @@ object FirestoreHelper {
     // ------------------------
     // 帳單
     // ------------------------
-    fun addBill(account: String, data: Map<String, Any>, onSuccess: () -> Unit) {
-        db.collection("users")
-            .document(account)
-            .collection("bills")
-            .add(data)
-            .addOnSuccessListener { onSuccess() }
+    fun addBill(account: String, data: Map<String, Any>, onResult: () -> Unit) {
+        val userRef = db.collection("users").document(account)
+        val billsRef = userRef.collection("bills")
+
+        val year = data["year"] as? Int ?: return
+        userRef.update( "years",
+            com.google.firebase.firestore.FieldValue.arrayUnion(year))
+
+        billsRef.add(data)
+            .addOnSuccessListener { onResult() }
+
     }
 
-    fun getBillsByMonth(account: String, year: Int, month: Int, onResult: (List<Bill>) -> Unit) {
+    fun getBillsByMonth(
+        account: String,
+        year: Int,
+        month: Int,
+        onResult: (List<Bill>) -> Unit
+    ) {
         db.collection("users")
             .document(account)
             .collection("bills")
@@ -108,7 +124,7 @@ object FirestoreHelper {
     // -----------------------------
 // 取得使用者資料（為了讀取舊密碼）
 // -----------------------------
-    fun getUser(account: String, onResult: (Map<String, Any>?) -> Unit) {
+    fun getUser(account: String, onResult: (Map<String, Any>?) -> Unit, onFail: () -> Unit) {
         db.collection("users")
             .document(account)
             .get()
@@ -116,7 +132,7 @@ object FirestoreHelper {
                 onResult(doc.data)
             }
             .addOnFailureListener {
-                onResult(null)
+                onFail()
             }
     }
 
@@ -126,35 +142,38 @@ object FirestoreHelper {
     fun updatePassword(
         account: String,
         newPassword: String,
-        onSuccess: () -> Unit,
+        onResult: () -> Unit,
         onFail: (Exception) -> Unit
     ) {
         db.collection("users")
             .document(account)
             .update("password", newPassword)
-            .addOnSuccessListener { onSuccess() }
+            .addOnSuccessListener { onResult() }
             .addOnFailureListener { e -> onFail(e) }
     }
 
     fun createUser(
         account: String,
         password: String,
-        onSuccess: () -> Unit,
+        onResult: () -> Unit,
         onFail: (Exception) -> Unit
     ) {
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+
         val data = mapOf(
             "account" to account,
-            "password" to password
+            "password" to password,
+            "years" to listOf(currentYear)
         )
 
         db.collection("users")
             .document(account)
             .set(data)
-            .addOnSuccessListener { onSuccess() }
+            .addOnSuccessListener { onResult() }
             .addOnFailureListener { e -> onFail(e) }
     }
 
-    fun createDefaultCategories(account: String, onSuccess: () -> Unit) {
+    fun createDefaultCategories(account: String, onResult: () -> Unit) {
 
         val userCategories = db.collection("users")
             .document(account)
@@ -167,12 +186,22 @@ object FirestoreHelper {
             mapOf("name" to "交通", "type" to "expense", "sortOrder" to 2, "fixed" to false),
             mapOf("name" to "購物", "type" to "expense", "sortOrder" to 3, "fixed" to false),
             mapOf("name" to "住房", "type" to "expense", "sortOrder" to 4, "fixed" to false),
-            mapOf("name" to "生活用品", "type" to "expense", "sortOrder" to 5, "fixed" to false),
+            mapOf(
+                "name" to "生活用品",
+                "type" to "expense",
+                "sortOrder" to 5,
+                "fixed" to false
+            ),
             mapOf("name" to "娛樂", "type" to "expense", "sortOrder" to 6, "fixed" to false),
             mapOf("name" to "醫療", "type" to "expense", "sortOrder" to 7, "fixed" to false),
             mapOf("name" to "教育", "type" to "expense", "sortOrder" to 8, "fixed" to false),
             mapOf("name" to "通訊", "type" to "expense", "sortOrder" to 9, "fixed" to false),
-            mapOf("name" to "其他支出", "type" to "expense", "sortOrder" to 10, "fixed" to false)
+            mapOf(
+                "name" to "其他支出",
+                "type" to "expense",
+                "sortOrder" to 10,
+                "fixed" to false
+            )
         )
 
         val incomeCategories = listOf(
@@ -192,7 +221,7 @@ object FirestoreHelper {
             batch.set(doc, cat)
         }
 
-        batch.commit().addOnSuccessListener { onSuccess() }
+        batch.commit().addOnSuccessListener { onResult() }
     }
 
     fun getBillsByYear(
@@ -216,10 +245,7 @@ object FirestoreHelper {
     }
 
 
-    // ------------------------
 // EditBill 專用
-// ------------------------
-
     fun getBillById(account: String, billId: String, onResult: (Bill?) -> Unit) {
         db.collection("users")
             .document(account)
@@ -245,34 +271,44 @@ object FirestoreHelper {
         account: String,
         billId: String,
         data: Map<String, Any>,
-        onSuccess: () -> Unit
+        onResult: () -> Unit
     ) {
-        db.collection("users")
-            .document(account)
-            .collection("bills")
+        val userRef = db.collection("users").document(account)
+        val billsRef = userRef.collection("bills")
+
+        val year = data["year"] as? Int
+        if (year != null) {
+            userRef.update(
+                "years",
+                com.google.firebase.firestore.FieldValue.arrayUnion(year)
+            )
+        }
+
+        billsRef
             .document(billId)
             .update(data)
-            .addOnSuccessListener { onSuccess() }
+            .addOnSuccessListener { onResult() }
     }
+
 
     fun deleteBill(
         account: String,
         billId: String,
-        onSuccess: () -> Unit
+        onResult: () -> Unit
     ) {
         db.collection("users")
             .document(account)
             .collection("bills")
             .document(billId)
             .delete()
-            .addOnSuccessListener { onSuccess() }
+            .addOnSuccessListener { onResult() }
     }
 
     fun addCategory(
         account: String,
         type: String,
         name: String,
-        onSuccess: () -> Unit
+        onResult: () -> Unit
     ) {
         val categoriesRef = db.collection("users")
             .document(account)
@@ -297,7 +333,7 @@ object FirestoreHelper {
 
                 categoriesRef
                     .add(data)
-                    .addOnSuccessListener { onSuccess() }
+                    .addOnSuccessListener { onResult() }
             }
     }
 
@@ -305,34 +341,22 @@ object FirestoreHelper {
         account: String,
         categoryId: String,
         newName: String,
-        onSuccess: () -> Unit
+        onResult: () -> Unit
     ) {
         db.collection("users")
             .document(account)
             .collection("categories")
             .document(categoryId)
             .update("name", newName)
-            .addOnSuccessListener { onSuccess() }
+            .addOnSuccessListener { onResult() }
     }
 
-    fun deleteCategory(
-        account: String,
-        categoryId: String,
-        onSuccess: () -> Unit
-    ) {
-        db.collection("users")
-            .document(account)
-            .collection("categories")
-            .document(categoryId)
-            .delete()
-            .addOnSuccessListener { onSuccess() }
-    }
 
     fun deleteCategoryAndMoveBills(
         account: String,
         categoryId: String,
         categoryType: String,
-        onSuccess: () -> Unit
+        onResult: () -> Unit
     ) {
         val userRef = db.collection("users").document(account)
         val categoriesRef = userRef.collection("categories")
@@ -345,6 +369,9 @@ object FirestoreHelper {
             .limit(1)
             .get()
             .addOnSuccessListener { catSnap ->
+
+
+                if (catSnap.isEmpty) return@addOnSuccessListener
 
                 val unclassifiedId = catSnap.documents.first().id
 
@@ -366,7 +393,7 @@ object FirestoreHelper {
                                 categoriesRef
                                     .document(categoryId)
                                     .delete()
-                                    .addOnSuccessListener { onSuccess() }
+                                    .addOnSuccessListener { onResult() }
                             }
                     }
             }
@@ -375,7 +402,7 @@ object FirestoreHelper {
 
     fun clearAllBills(
         account: String,
-        onSuccess: () -> Unit,
+        onResult: () -> Unit,
         onFail: (Exception) -> Unit
     ) {
         val billsRef = db.collection("users")
@@ -385,7 +412,7 @@ object FirestoreHelper {
         billsRef.get()
             .addOnSuccessListener { qs ->
                 if (qs.isEmpty) {
-                    onSuccess()
+                    onResult()
                     return@addOnSuccessListener
                 }
 
@@ -395,13 +422,35 @@ object FirestoreHelper {
                 }
 
                 batch.commit()
-                    .addOnSuccessListener { onSuccess() }
+                    .addOnSuccessListener { onResult() }
                     .addOnFailureListener { e -> onFail(e) }
             }
             .addOnFailureListener { e ->
                 onFail(e)
             }
     }
+
+    fun getUserYears(
+        account: String,
+        onResult: (List<Int>) -> Unit,
+        onFail: () -> Unit
+    ) {
+        db.collection("users")
+            .document(account)
+            .get()
+            .addOnSuccessListener { doc ->
+                val years = doc.get("years") as? List<Long>
+                if (years != null) {
+                    onResult(years.map { it.toInt() })
+                } else {
+                    onResult(emptyList())
+                }
+            }
+            .addOnFailureListener {
+                onFail()
+            }
+    }
+
 
 
 }

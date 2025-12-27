@@ -52,32 +52,34 @@ class LoginActivity : AppCompatActivity() {
         val password = binding.loginTietPassword.text.toString()
 
         if (account.isBlank() || password.isBlank()) {
-            Toast.makeText(this,"帳號或密碼不能空白",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "帳號或密碼不能空白", Toast.LENGTH_SHORT).show()
             return
         }
+        binding.loginBtLogin.isEnabled = false
 
-        // ⭐ 使用 FirestoreHelper，而非直接用 FirebaseFirestore
-        FirestoreHelper.getUser(account) { data ->
+        FirestoreHelper.getUser(account, onResult = { data ->
+            binding.loginBtLogin.isEnabled = true
 
             if (data == null) {
-                Toast.makeText(this,"帳號不存在",Toast.LENGTH_SHORT).show()
-
+                Toast.makeText(this, "帳號不存在或網路錯誤", Toast.LENGTH_SHORT).show()
                 return@getUser
             }
 
             val pwd = data["password"]?.toString() ?: ""
-
             if (pwd != password) {
-                Toast.makeText(this,"密碼錯誤",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "密碼錯誤", Toast.LENGTH_SHORT).show()
+                binding.loginBtLogin.isEnabled = true
                 return@getUser
             }
-
-            // ⭐ 登入成功 → 保存帳號
+            //  登入成功 → 保存帳號
             UserManager.setAccount(this, account)
-
-            Toast.makeText(this,"登入成功",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "登入成功", Toast.LENGTH_SHORT).show()
             goMain()
+        }, onFail = {
+            binding.loginBtLogin.isEnabled = true
+            Toast.makeText(this, "網路錯誤，請稍後再試", Toast.LENGTH_SHORT).show()
         }
+        )
     }
 
     private fun goMain() {

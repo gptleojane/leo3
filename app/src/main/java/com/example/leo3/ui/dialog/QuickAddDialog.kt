@@ -84,7 +84,7 @@ class QuickAddDialog : DialogFragment() {
 
     private fun addBill(type: String) {
 
-        if(amount==0L)return
+        if (amount == 0L) return
 
         val cal = Calendar.getInstance()
         val timestamp = com.google.firebase.Timestamp(cal.time)
@@ -97,9 +97,16 @@ class QuickAddDialog : DialogFragment() {
         val account = UserManager.getAccount(requireContext()) ?: return
 
         //  取得「未分類」的autoID
-        FirestoreHelper.getCategories(account, type) { list ->
-            val defaultCategoryId =
-                list.firstOrNull { it.name == "未分類" }?.id ?: return@getCategories
+        FirestoreHelper.getCategories(account, type, onResult = { list ->
+            val defaultCategory = list.firstOrNull { it.name == "未分類" }
+            if (defaultCategory == null) {
+                context?.let {
+                    Toast.makeText(it, "找不到預設分類，請重新登入", Toast.LENGTH_SHORT).show()
+                }
+                return@getCategories
+            }
+
+            val defaultCategoryId = defaultCategory.id
 
             //  第 2 步：決定要新增的資料內容
             val billData = hashMapOf(
@@ -114,7 +121,7 @@ class QuickAddDialog : DialogFragment() {
                 "categoryId" to defaultCategoryId
             )
 
-            // ⭐ 第 3 步：新增資料
+            //  第 3 步：新增資料
             FirestoreHelper.addBill(account, billData) {
                 if (!isAdded) return@addBill
 
@@ -124,7 +131,11 @@ class QuickAddDialog : DialogFragment() {
                 onAdded?.invoke()
                 if (isAdded) dismissAllowingStateLoss()
             }
-        }
+        }, onFail = {
+            context?.let {
+                Toast.makeText(it, "讀取分類失敗，請檢查網路", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun renderAmount() {

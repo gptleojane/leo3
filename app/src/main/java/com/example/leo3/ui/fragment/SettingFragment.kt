@@ -75,7 +75,7 @@ class SettingFragment : Fragment() {
                 .setPositiveButton("確認") { _, _ ->
                     FirestoreHelper.clearAllBills(
                         account,
-                        onSuccess = {
+                        onResult = {
                             Toast.makeText(context, "清除成功", Toast.LENGTH_SHORT).show()
 
                             AppFlags.reloadData = true

@@ -122,11 +122,14 @@ class EditCategoryActivity : AppCompatActivity() {
         val type = selectedType ?: return
         val account = UserManager.getAccount(this) ?: return
 
-        FirestoreHelper.getCategories(account, type) { list ->
+        FirestoreHelper.getCategories(account, type, onResult = { list ->
             categoryList.clear()
             categoryList.addAll(list)
             setupAdapter()
-        }
+        }, onFail = {
+            Toast.makeText(this, "讀取分類失敗，請檢查網路", Toast.LENGTH_SHORT).show()
+
+        })
     }
 
     private fun setupAdapter() {
@@ -169,10 +172,16 @@ class EditCategoryActivity : AppCompatActivity() {
             return
         }
 
-        if (newName.length > 4) {
-            Toast.makeText(this, "分類名稱最多 4 個字", Toast.LENGTH_SHORT).show()
+        if (newName.length > 5) {
+            Toast.makeText(this, "分類名稱最多 5 個字", Toast.LENGTH_SHORT).show()
             return
         }
+
+        if (newName == "未分類") {
+            Toast.makeText(this, "此名稱為系統保留，請換一個", Toast.LENGTH_SHORT).show()
+            return
+        }
+
 
         val account = UserManager.getAccount(this) ?: return
 
@@ -201,8 +210,13 @@ class EditCategoryActivity : AppCompatActivity() {
             return
         }
 
-        if (name.length > 4) {
-            Toast.makeText(this, "分類名稱最多 4 個字", Toast.LENGTH_SHORT).show()
+        if (name.length > 5) {
+            Toast.makeText(this, "分類名稱最多 5 個字", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (name == "未分類") {
+            Toast.makeText(this, "此名稱為系統保留，請換一個", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -237,13 +251,14 @@ class EditCategoryActivity : AppCompatActivity() {
             .setMessage("刪除後，該分類底下的所有帳目將移至『未分類』\n此操作無法復原，確定要刪除嗎？")
             .setPositiveButton("確認") { _, _ ->
                 FirestoreHelper.deleteCategoryAndMoveBills(
-                    account, category.id, category.type,) {
-                        Toast.makeText(this, "分類已刪除，帳目已移至未分類", Toast.LENGTH_SHORT).show()
+                    account, category.id, category.type,
+                ) {
+                    Toast.makeText(this, "分類已刪除，帳目已移至未分類", Toast.LENGTH_SHORT).show()
 
-                        selectedCategory = null
-                        callReload = true
-                        loadCategories()
-                    }
+                    selectedCategory = null
+                    callReload = true
+                    loadCategories()
+                }
             }
             .setNegativeButton("取消", null)
             .show()

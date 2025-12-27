@@ -39,7 +39,7 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
-//    供mainactivity呼叫重抓資料
+    //    供mainactivity呼叫重抓資料
     fun reload() {
         loadHomeData()
     }
@@ -95,6 +95,15 @@ class HomeFragment : Fragment() {
             binding.homeExpenseLabel.text = "$$expenseTotal"
             binding.homeIncomeLabel.text = "$$incomeTotal"
             binding.homeBalanceLabel.text = "$$balance"
+
+            if (expenseTotal > incomeTotal) {
+                binding.homeIvHappy.setImageResource(R.drawable.happy)
+            }else{
+                binding.homeIvHappy.setImageResource(R.drawable.unhappy)
+            }
+
+            //今日記帳幾筆
+
 
             if (totalCount == 0) {
                 binding.homeRecordHint.text = "今日還沒記帳哦 !"

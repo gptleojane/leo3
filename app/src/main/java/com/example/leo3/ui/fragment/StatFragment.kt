@@ -43,7 +43,7 @@ class StatFragment : Fragment() {
         reload()
 
         binding.statIv.setOnClickListener {
-            reload()
+            resetToDefaultStat()
         }
     }
 
@@ -60,27 +60,19 @@ class StatFragment : Fragment() {
             reload()
         }
 
-        // 你原本這段保留
         childFragmentManager.addOnBackStackChangedListener {
             if (childFragmentManager.backStackEntryCount == 0) {
                 binding.statDetailContainer.visibility = View.GONE
+                reload() // ⭐ 保證畫面一定重畫
             }
         }
     }
-
 
     fun reload() {
         loadStatData()
     }
 
     private fun setupUI() {
-        val cal = Calendar.getInstance()
-        currentYear = cal.get(Calendar.YEAR)
-        currentMonth = null
-
-        binding.statCurrentYear.text = "${currentYear}年"
-        binding.statCurrentMonth.text = "全部月份"
-
         binding.statCategoryRecyclerExpense.layoutManager =
             LinearLayoutManager(requireContext())
 
@@ -93,10 +85,6 @@ class StatFragment : Fragment() {
 
         binding.statMonthSelector.setOnClickListener {
             showMonthPopupMenu()
-        }
-
-        binding.statIv.setOnClickListener {
-            reload()
         }
 
 
@@ -112,22 +100,40 @@ class StatFragment : Fragment() {
 
 
     private fun loadStatData() {
+        if (currentYear == 0) {
+            val cal = Calendar.getInstance()
+            currentYear = cal.get(Calendar.YEAR)
+            currentMonth = null
+        }
+
+        binding.statCurrentYear.text = "${currentYear}年"
+        binding.statCurrentMonth.text =
+            currentMonth?.let { "${it}月" } ?: "全部月份"
+
         val account = UserManager.getAccount(requireContext()) ?: return
 
-        FirestoreHelper.getAllCategories(account) { categories ->
+        loadCategories(account)
+    }
 
+    private fun loadCategories(account: String) {
+        FirestoreHelper.getAllCategories(account) { list ->
             if (!isAdded || _binding == null) return@getAllCategories
 
-            categoryMap = categories.associate { it.id to it.name }
+            categoryMap = list.associate { it.id to it.name }
 
-            //  再抓帳單
-            if (currentMonth == null) {
-                loadYearBills(account, currentYear)
-            } else {
-                loadMonthBills(account, currentYear, currentMonth!!)
-            }
+            loadBills(account)
         }
     }
+
+    private fun loadBills(account: String) {
+        if (currentMonth == null) {
+            loadYearBills(account, currentYear)
+        } else {
+            loadMonthBills(account, currentYear, currentMonth!!)
+        }
+    }
+
+
 
     private fun loadMonthBills(
         account: String,
@@ -226,22 +232,30 @@ class StatFragment : Fragment() {
 
 
     private fun showYearPopupMenu() {
+        val account = UserManager.getAccount(requireContext()) ?: return
         val popup = PopupMenu(requireContext(), binding.statYearSelector)
 
-        val currentYearData = Calendar.getInstance().get(Calendar.YEAR)
-        val years = (currentYearData downTo currentYearData - 5).toList()
-        years.forEach { popup.menu.add(it.toString()) }
+        FirestoreHelper.getUserYears(
+            account,
+            onResult = { years ->
+                years.sortedDescending().forEach {
+                    popup.menu.add(it.toString())
+                }
 
-        popup.setOnMenuItemClickListener { item ->
-            currentYear = item.title.toString().toInt()
-            binding.statCurrentYear.text = "${currentYear}年"
+                popup.setOnMenuItemClickListener { item ->
+                    currentYear = item.title.toString().toInt()
+                    binding.statCurrentYear.text = "${currentYear}年"
+                    reload()
+                    true
+                }
 
-            reload()
-            true
-        }
-
-        popup.show()
+                popup.show()
+            },
+            onFail = {}
+        )
     }
+
+
 
     private fun showMonthPopupMenu() {
         val popup = PopupMenu(requireContext(), binding.statMonthSelector)
@@ -252,20 +266,20 @@ class StatFragment : Fragment() {
         popup.setOnMenuItemClickListener { item ->
             val title = item.title.toString()
 
-            currentMonth = if (title == "全部月份") {
-                binding.statCurrentMonth.text = "全部月份"
-                null
-            } else {
-                val m = title.replace("月", "").toInt()
-                binding.statCurrentMonth.text = "${m}月"
-                m
-            }
+            currentMonth =
+                if (title == "全部月份") null
+                else title.replace("月", "").toInt()
+
+            binding.statCurrentMonth.text =
+                currentMonth?.let { "${it}月" } ?: "全部月份"
+
             reload()
             true
         }
 
         popup.show()
     }
+
 
     private fun openStatDetail(
         categoryId: String,
@@ -290,6 +304,12 @@ class StatFragment : Fragment() {
             .commit()
     }
 
+    private fun resetToDefaultStat() {
+        val cal = Calendar.getInstance()
+        currentYear = cal.get(Calendar.YEAR)
+        currentMonth = null   // ⭐ Stat 的「預設」是全部月份
+        reload()
+    }
 
 
 }

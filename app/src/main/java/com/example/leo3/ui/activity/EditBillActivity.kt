@@ -101,7 +101,7 @@ class EditBillActivity : AppCompatActivity() {
             }
 
             currentBill = bill
-            originalDate =bill.date
+            originalDate = bill.date
             amount = bill.amount
 
             renderBillToUI(bill)
@@ -164,7 +164,7 @@ class EditBillActivity : AppCompatActivity() {
     private fun loadCategories(type: String, preselectId: String?) {
         val account = UserManager.getAccount(this) ?: return
 
-        FirestoreHelper.getCategories(account, type) { list ->
+        FirestoreHelper.getCategories(account, type, onResult = { list ->
             categoryList.clear()
             categoryList.addAll(list)
 
@@ -178,7 +178,10 @@ class EditBillActivity : AppCompatActivity() {
 
             binding.editbillRecyclerView.adapter = categoryAdapter
             selectedCategory = categoryList[defaultIndex]
-        }
+        }, onFail = {
+            Toast.makeText(this, "讀取分類失敗，請檢查網路", Toast.LENGTH_SHORT).show()
+
+        })
     }
 
 
@@ -187,7 +190,7 @@ class EditBillActivity : AppCompatActivity() {
     private fun updateBill() {
         val category = selectedCategory ?: return
         val account = UserManager.getAccount(this) ?: return
-        val bill =currentBill ?:return
+        val bill = currentBill ?: return
 
         val newDateText = binding.editbillTietDate.text.toString()
         val oldDateText = "${bill.year}/${bill.month}/${bill.day}"

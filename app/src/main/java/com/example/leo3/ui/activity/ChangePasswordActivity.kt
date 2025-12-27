@@ -70,7 +70,7 @@ class ChangePasswordActivity : AppCompatActivity() {
         FirestoreHelper.updatePassword(
             account = account,
             newPassword = newPwd,
-            onSuccess = {
+            onResult = {
                 Toast.makeText(this, "修改成功", Toast.LENGTH_SHORT).show()
                 finish()
             },
@@ -83,10 +83,13 @@ class ChangePasswordActivity : AppCompatActivity() {
     private fun loadOldPassword() {
         val account = UserManager.getAccount(this) ?: return
 
-        FirestoreHelper.getUser(account) { data ->
+        FirestoreHelper.getUser(account,onResult = { data ->
             val oldPwd = data?.get("password")?.toString() ?: return@getUser
             binding.cpTietOldpassword.setText(oldPwd)
+        },onFail = {
+            Toast.makeText(this,"網路錯誤，請稍後再試",Toast.LENGTH_SHORT).show()
         }
+        )
     }
 
 }

@@ -182,15 +182,17 @@ class AddBillActivity : AppCompatActivity() {
     }
 
 
-    // Firestore 載入分類 → 改成呼叫 CategoryRepository
     private fun loadCategories(type: String) {
         val account = UserManager.getAccount(this) ?: return
 
-        FirestoreHelper.getCategories(account, type) { list ->
+        FirestoreHelper.getCategories(account, type, onResult = { list ->
             categoryList.clear()
             categoryList.addAll(list)
             setupCategoryAdapter()
-        }
+        }, onFail = {
+            Toast.makeText(this, "讀取分類失敗，請檢查網路", Toast.LENGTH_SHORT).show()
+
+        })
     }
 
 
@@ -218,7 +220,7 @@ class AddBillActivity : AppCompatActivity() {
                 return
 
             }
-            amount=next
+            amount = next
             renderAmount()
         }
 

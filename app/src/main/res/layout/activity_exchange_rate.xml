@@ -170,6 +170,7 @@
 
         <Button
             android:id="@+id/exchange_tv_results1_save1"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -186,6 +187,7 @@
 
         <Button
             android:id="@+id/exchange_tv_results2_save1"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

@@ -22,12 +22,12 @@
         <!-- 頭像（支援深/淺色） -->
         <ImageView
             android:id="@+id/setting_fragment_userInfo_avatar"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:clipToOutline="true"
             android:contentDescription="@null"
             android:scaleType="centerCrop"
-            android:src="@drawable/app_icon" />
+            android:src="@drawable/user" />
 
         <!-- 登入者帳號文字（深/淺模式自動切換） -->
         <TextView
@@ -56,9 +56,10 @@
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
+        android:layout_marginStart="16dp"
         android:text="@string/personalize"
         android:textColor="@color/text_hint"
-        android:textSize="14sp" />
+        android:textSize="18sp" />
 
 
 
@@ -73,11 +74,11 @@
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="8dp"
             android:contentDescription="@null"
-            android:src="@drawable/app_icon" />
+            android:src="@drawable/password" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -99,11 +100,11 @@
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="8dp"
             android:contentDescription="@null"
-            android:src="@drawable/app_icon" />
+            android:src="@drawable/signout" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -124,11 +125,11 @@
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="8dp"
             android:contentDescription="@null"
-            android:src="@drawable/app_icon" />
+            android:src="@drawable/clean" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -153,9 +154,10 @@
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
+        android:layout_marginStart="16dp"
         android:text="@string/set"
         android:textColor="@color/text_hint"
-        android:textSize="14sp" />
+        android:textSize="18sp" />
 
     <!-- 新增分類 -->
     <LinearLayout
@@ -168,11 +170,11 @@
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="8dp"
             android:contentDescription="@null"
-            android:src="@drawable/app_icon" />
+            android:src="@drawable/category" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -196,11 +198,11 @@
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="8dp"
             android:contentDescription="@null"
-            android:src="@drawable/app_icon" />
+            android:src="@drawable/exchange" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -225,9 +227,10 @@
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
         android:paddingBottom="8dp"
+        android:layout_marginStart="16dp"
         android:text="@string/other"
         android:textColor="@color/text_hint"
-        android:textSize="14sp" />
+        android:textSize="18sp" />
 
     <!-- 關於 -->
     <LinearLayout
@@ -240,11 +243,11 @@
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_marginStart="8dp"
             android:contentDescription="@null"
-            android:src="@drawable/app_icon" />
+            android:src="@drawable/info" />
 
         <TextView
             android:layout_width="wrap_content"

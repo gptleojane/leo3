@@ -10,6 +10,11 @@
     android:paddingRight="8dp">
 
     <!-- ===================== 頂部區域 ===================== -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +26,7 @@
             android:id="@+id/record_iv"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginRight="30dp"
+            android:layout_marginRight="25dp"
             android:clickable="true"
             android:contentDescription="@null"
             android:focusable="true"
@@ -62,7 +67,7 @@
             android:id="@+id/record_month_selector"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="4dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:padding="9dp">
@@ -85,14 +90,59 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/record_search_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/bg_main"
+            android:layout_marginStart="4dp"
+            android:gravity="end|center"
+            android:text="🔍搜尋"
+            android:textColor="@color/text_primary" />
+
+        <TextView
             android:id="@+id/record_tv_hint"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="end|center"
             android:paddingEnd="10dp"
             android:text="小提醒"
-            android:textSize="14dp"/>
+            android:textSize="14dp" />
 
+    </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/record_search_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="2dp">
+
+            <EditText
+                android:id="@+id/record_et_search"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:hint="搜尋分類或備註（例如：早餐）"
+                android:imeOptions="actionSearch"
+                android:paddingHorizontal="12dp"
+                android:singleLine="true"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/record_btn_clear"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="8dp"
+                android:contentDescription="@null"
+                android:padding="6dp"
+                android:src="@drawable/cancel"
+                android:visibility="visible"
+                app:tint="@color/text_secondary" />
+        </LinearLayout>
     </LinearLayout>
 
 
@@ -100,10 +150,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:orientation="horizontal"
         android:paddingVertical="8dp">
 
         <!-- 支出 -->
@@ -191,8 +241,14 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginVertical="12dp"
+        android:layout_marginVertical="8dp"
         android:background="@color/divider" />
+
+
+
+    <include
+        android:id="@+id/record_empty_state"
+        layout="@layout/view_empty_state" />
 
 
     <!-- ===================== 記帳列表 RecyclerView ===================== -->

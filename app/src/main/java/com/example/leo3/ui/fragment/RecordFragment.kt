@@ -6,13 +6,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.leo3.data.firebase.FirestoreHelper
 import com.example.leo3.data.model.Bill
-import com.example.leo3.data.model.RecordUiModel
 import com.example.leo3.databinding.FragmentRecordBinding
 import com.example.leo3.ui.activity.EditBillActivity
 import com.example.leo3.ui.adapter.RecordAdapter
@@ -21,6 +19,8 @@ import com.example.leo3.util.UserManager
 import com.google.android.material.snackbar.Snackbar
 import java.util.Calendar
 import kotlin.collections.filter
+import androidx.core.widget.addTextChangedListener
+
 
 class RecordFragment : Fragment() {
 
@@ -32,6 +32,9 @@ class RecordFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var categoryMap: Map<String, String> = emptyMap()
+    private var allBills: List<Bill> = emptyList()
+    private var isSearchExpanded = false
+
 
 
     override fun onCreateView(
@@ -47,6 +50,15 @@ class RecordFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupUI()
         reload()
+
+        binding.recordEtSearch.addTextChangedListener { text ->
+            applySearch(text?.toString() ?: "")
+        }
+        binding.recordBtnClear.setOnClickListener {
+            binding.recordEtSearch.setText("")
+            updateRecordUI(allBills)
+        }
+
     }
 
     override fun onDestroyView() {
@@ -60,6 +72,17 @@ class RecordFragment : Fragment() {
 
     private fun setupUI() {
         binding.billRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+        binding.recordSearchHint.setOnClickListener {
+            isSearchExpanded = !isSearchExpanded
+
+            binding.recordSearchContainer.visibility =
+                if (isSearchExpanded) View.VISIBLE else View.GONE
+
+            if (isSearchExpanded) {
+                binding.recordEtSearch.requestFocus()
+            }
+        }
 
         binding.recordYearSelector.setOnClickListener { showYearPopupMenu() }
         binding.recordMonthSelector.setOnClickListener { showMonthPopupMenu() }
@@ -106,7 +129,7 @@ class RecordFragment : Fragment() {
             bills.forEach {
                 it.categoryName = categoryMap[it.categoryId] ?: ""
             }
-
+            allBills = bills
             updateRecordUI(bills)
         }
     }
@@ -123,6 +146,7 @@ class RecordFragment : Fragment() {
     // ===== UI =====
 
     private fun updateRecordUI(bills: List<Bill>) {
+
         val totalExpense = bills.filter { it.type == "expense" }.sumOf { it.amount }
         val totalIncome = bills.filter { it.type == "income" }.sumOf { it.amount }
 
@@ -131,6 +155,15 @@ class RecordFragment : Fragment() {
         binding.recordSummaryBalanceAmount.text =
             "$${totalIncome - totalExpense}"
 
+
+        if (bills.isEmpty()) {
+            binding.recordEmptyState.emptyContainer.visibility = View.VISIBLE
+            binding.billRecyclerView.visibility = View.GONE
+            return
+        }
+
+        binding.recordEmptyState.emptyContainer.visibility = View.GONE
+        binding.billRecyclerView.visibility = View.VISIBLE
         val uiList = RecordUiBuilder.build(bills)
 
         binding.billRecyclerView.adapter =
@@ -161,27 +194,32 @@ class RecordFragment : Fragment() {
     // ===== Popup =====
 
     private fun showYearPopupMenu() {
+        val account = UserManager.getAccount(requireContext()) ?: return
         val popup = PopupMenu(requireContext(), binding.recordYearSelector)
-        val nowYear = Calendar.getInstance().get(Calendar.YEAR)
 
-        (nowYear downTo nowYear - 5).forEach {
-            popup.menu.add(it.toString())
-        }
+        FirestoreHelper.getUserYears(
+            account,
+            onResult = { years ->
+                years.sortedDescending().forEach {
+                    popup.menu.add(it.toString())
+                }
 
-        popup.setOnMenuItemClickListener { item ->
-            val account =
-                UserManager.getAccount(requireContext()) ?: return@setOnMenuItemClickListener true
-            val year = item.title.toString().toInt()
-            val month = binding.recordCurrentMonth.text
-                .toString().replace("月", "").toInt()
+                popup.setOnMenuItemClickListener { item ->
+                    val year = item.title.toString().toInt()
+                    val month = binding.recordCurrentMonth.text
+                        .toString().replace("月", "").toInt()
 
-            binding.recordCurrentYear.text = "${year}年"
-            loadBillsForQuery(account, year, month)
-            true
-        }
+                    binding.recordCurrentYear.text = "${year}年"
+                    loadBillsForQuery(account, year, month)
+                    true
+                }
 
-        popup.show()
+                popup.show()
+            },
+            onFail = { }
+        )
     }
+
 
     private fun showMonthPopupMenu() {
         val popup = PopupMenu(requireContext(), binding.recordMonthSelector)
@@ -206,4 +244,20 @@ class RecordFragment : Fragment() {
         val cal = Calendar.getInstance()
         return cal.get(Calendar.YEAR) to (cal.get(Calendar.MONTH) + 1)
     }
+
+    private fun applySearch(keyword: String) {
+        val trimmed = keyword.trim()
+
+        val result = if (trimmed.isEmpty()) {
+            allBills
+        } else {
+            allBills.filter { bill ->
+                val categoryMatch = bill.categoryName.contains(trimmed, ignoreCase = true)
+                val noteMatch = bill.note?.contains(trimmed, ignoreCase = true) ?: false
+                categoryMatch || noteMatch
+            }
+        }
+        updateRecordUI(result)
+    }
+
 }
