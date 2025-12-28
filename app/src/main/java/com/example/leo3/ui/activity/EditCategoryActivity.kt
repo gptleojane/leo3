@@ -81,6 +81,8 @@ class EditCategoryActivity : AppCompatActivity() {
         selectedType = null
         selectedCategory = null
 
+
+        binding.editcateTietRename.setText("")
         binding.editcateTvCategoryHint.text = "尚未選擇分類"
         binding.editcateTvTypeHint.text = "尚未選擇類別 (支出 / 收入)"
 
@@ -262,6 +264,9 @@ class EditCategoryActivity : AppCompatActivity() {
             }
             .setNegativeButton("取消", null)
             .show()
+        binding.editcateTietRename.setText("")
+        callReload = true
+        loadCategories()
     }
 
     override fun finish() {
